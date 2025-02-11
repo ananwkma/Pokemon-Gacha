@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CharacterCollection : MonoBehaviour
 {
-    [SerializeField] private CharacterIcon characterIcon;
+    [SerializeField] private Image characterIcon;
 
     string GetContainerTag(int sceneIndex) {
         switch (sceneIndex) {
@@ -19,17 +19,16 @@ public class CharacterCollection : MonoBehaviour
     } 
 
     void LoadCharacters() {
-        // int i = 0;
-        // int ICONIMAGEWIDTH = 100;
-        // string containerTag = GetContainerTag(SceneNavManager.GetActiveScene());
+        int i = 0;
+        int ICONIMAGEWIDTH = 100;
+        string containerTag = GetContainerTag(SceneNavManager.GetActiveScene());
 
-        // foreach (Character hero in SaveData.cc.characterCollection) {
-        //     CharacterIcon currentCharIcon = Instantiate(characterIcon) as CharacterIcon;
-        //     currentCharIcon.transform.SetParent (GameObject.FindGameObjectWithTag(containerTag).transform, false);
-        //     currentCharIcon.Icon.sprite = Resources.Load<Sprite>("Sprites/Icons/" + hero.Title);
-        //     currentCharIcon.MyCharacter = hero; 
-        //     i++;
-        // }
+        foreach (Character hero in SaveData.cc.characterCollection) {
+            Image currentCharIcon = Instantiate(characterIcon, new Vector3(i*ICONIMAGEWIDTH, 0, 0), Quaternion.identity) as Image;
+            currentCharIcon.transform.SetParent (GameObject.FindGameObjectWithTag(containerTag).transform, false);
+            currentCharIcon.sprite = Resources.Load<Sprite>("Sprites/Icons/" + hero.Title);
+            i++;
+        }
     }
 
     void Start()
