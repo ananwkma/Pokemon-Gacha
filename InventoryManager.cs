@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -9,10 +10,9 @@ public class InventoryManager : MonoBehaviour
 
     public InventorySlot[] inventorySlots;
     public GameObject inventoryItemPrefab;
-    int selectedSlot = -1;
+    public int selectedSlot = -1;
 
     public bool AddItem(Item item) {
-
         for (int i = 0; i < inventorySlots.Length; i++) {
             InventorySlot slot = inventorySlots[i];
             InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
@@ -21,13 +21,12 @@ public class InventoryManager : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
 
-    void SpawnNewItem(Item item, InventorySlot slot) {
+    public void SpawnNewItem(Item item, InventorySlot slot) {
         GameObject newItemGo = Instantiate(inventoryItemPrefab, slot.transform);
-        InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>(); 
+        InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
         inventoryItem.InitializeItem(item);
     }
 
@@ -62,12 +61,6 @@ public class InventoryManager : MonoBehaviour
         if (teamComp.Count > 0) {
             teamComp.Remove(character);
         }
-    }
-
-    
-
-    public void InventorySlotClicked() {
-
     }
 
     private void Update() {

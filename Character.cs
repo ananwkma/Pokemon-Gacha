@@ -34,20 +34,20 @@ public class Stats
     private int mp;
     private int rarity;
 
-    public int ATK { get; set; }
-    public int DEF { get; set; }
-    public int HP { get; set; }
-    public int MP { get; set; }
+    public int Atk { get; set; }
+    public int Def { get; set; }
+    public int Hp { get; set; }
+    public int Mp { get; set; }
     public int Rarity { get; set; }
     
     public Stats() { }
     
     public Stats(int atk, int def, int hp, int mp, int rarity)
     {
-        ATK = atk;
-        DEF = def;
-        HP = hp;
-        MP = mp;
+        Atk = atk;
+        Def = def;
+        Hp = hp;
+        Mp = mp;
         Rarity = rarity;    
     }
 }

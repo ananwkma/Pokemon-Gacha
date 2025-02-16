@@ -15,14 +15,14 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void InitializeItem(Item newItem) {
         item = newItem;
-        image.sprite = newItem.image;
+        Debug.Log("name on init: " + item.CharacterName);
+        image.sprite = Resources.Load<Sprite>("Sprites/Icons/" + newItem.Title);
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
         image.raycastTarget = false;
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
-        // transform.SetAsLastSibling();
     }
 
     public void OnDrag(PointerEventData eventData) {
@@ -32,5 +32,16 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnEndDrag(PointerEventData eventData) {
         image.raycastTarget = true;
         transform.SetParent(parentAfterDrag);
+    }
+
+    public void SetSelectedCharacter () {
+        Player.selectedCharacter = item;
+        Debug.Log("item name" + item.CharacterName);
+        Debug.Log("selected name" + Player.selectedCharacter.CharacterName);
+    }
+
+    public void ClearSelectedCharacter () {
+        Player.selectedCharacter = null;
+        Debug.Log("clear " + Player.selectedCharacter);
     }
 }

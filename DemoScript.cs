@@ -19,11 +19,13 @@ public class DemoScript : MonoBehaviour
 
     public void GetSelectedItem() {
         Item receivedItem = inventoryManager.GetSelectedItem(false);
-        if (receivedItem != null) {
-            Debug.Log("Received item: " + receivedItem);
-        } else {
-            Debug.Log("No item received!");
-        }
+        Debug.Log("Received item: " + receivedItem.CharacterName);
+        Debug.Log("selectedslot " + inventoryManager.selectedSlot);
+        // if (receivedItem != null) {
+        //     Debug.Log("Received item: " + receivedItem);
+        // } else {
+        //     Debug.Log("No item received!");
+        // }
     }
 
     public void UseSelectedItem() {

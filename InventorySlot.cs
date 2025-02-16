@@ -28,4 +28,9 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             InventoryItem.parentAfterDrag = transform;
         }
     }
+    
+    public void OnClick(PointerEventData eventData) {
+        Debug.Log(eventData.button);
+        // ChangeSelectedSlot(number);
+    }
 }

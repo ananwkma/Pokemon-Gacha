@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class CharacterCollection : MonoBehaviour
 {
     [SerializeField] private Item itemPrefab;
+    public InventoryManager inventoryManager;
+    public Item[] itemsToPickup;
 
     string GetContainerTag(int sceneIndex) {
         switch (sceneIndex) {
@@ -20,14 +22,19 @@ public class CharacterCollection : MonoBehaviour
 
     void LoadCharacters() {
         int i = 0;
-        // int ICONIMAGEWIDTH = 100;
         string containerTag = GetContainerTag(SceneNavManager.GetActiveScene());
+        if (containerTag == "CharacterSelection") i = 4;
 
         foreach (Character hero in SaveData.cc.characterCollection) {
-            // CharacterIcon _character;
-            // Image currentCharIcon = Instantiate(characterIconPrefab.Initialize(_character));
-            // currentCharIcon.transform.SetParent (GameObject.FindGameObjectWithTag(containerTag).transform, false);
-            // currentCharIcon.sprite = Resources.Load<Sprite>("Sprites/Icons/" + hero.Title);
+            // itemPrefab.Title = hero.Title;
+            // itemPrefab.CharacterName = hero.Name;
+            // itemPrefab.Atk = hero.Stats.Atk;
+            // itemPrefab.Def = hero.Stats.Def;
+            // itemPrefab.Hp = hero.Stats.Hp;
+            // itemPrefab.Mp = hero.Stats.Mp;
+            // itemPrefab.Description = "testzzzz";
+            // Debug.Log("loadchars " + itemPrefab.CharacterName);
+            inventoryManager.SpawnNewItem(itemPrefab, inventoryManager.inventorySlots[i]);
             i++;
         }
     }

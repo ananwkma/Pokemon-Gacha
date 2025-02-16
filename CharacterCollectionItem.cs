@@ -17,6 +17,6 @@ public class CharacterCollectionItem : MonoBehaviour
     public void Initialize(Item item)
     {
         myItem = item;
-        characterIcon.sprite = item.image;
+        characterIcon.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + item.Title);
     }
 }

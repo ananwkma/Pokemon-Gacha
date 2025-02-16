@@ -34,7 +34,7 @@ public class GachaButton : MonoBehaviour
     }
 
     public void populateDescriptionText(Character roll) {
-        descriptionText.text = "HP " + roll.Stats.HP + "\nMP " + roll.Stats.MP + "\nATK " + roll.Stats.ATK + "\nDEF " + roll.Stats.DEF;
+        descriptionText.text = "HP " + roll.Stats.Hp + "\nMP " + roll.Stats.Mp + "\nATK " + roll.Stats.Atk + "\nDEF " + roll.Stats.Def;
         descriptionText.enabled = true;
     }
 
