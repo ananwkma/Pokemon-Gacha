@@ -5,8 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Item")]
 public class Item : ScriptableObject
 {
-    // public Sprite image;
-    // public Sprite iconSprite;
     public string CharacterName;
     public string Title;
     public string Description; 

@@ -26,14 +26,16 @@ public class CharacterCollection : MonoBehaviour
         if (containerTag == "CharacterSelection") i = 4;
 
         foreach (Character hero in SaveData.cc.characterCollection) {
-            // itemPrefab.Title = hero.Title;
-            // itemPrefab.CharacterName = hero.Name;
-            // itemPrefab.Atk = hero.Stats.Atk;
-            // itemPrefab.Def = hero.Stats.Def;
-            // itemPrefab.Hp = hero.Stats.Hp;
-            // itemPrefab.Mp = hero.Stats.Mp;
-            // itemPrefab.Description = "testzzzz";
-            // Debug.Log("loadchars " + itemPrefab.CharacterName);
+            itemPrefab.Title = hero.Title;
+            itemPrefab.CharacterName = hero.Name;
+            itemPrefab.Atk = hero.Stats.Atk;
+            itemPrefab.Def = hero.Stats.Def;
+            itemPrefab.Hp = hero.Stats.Hp;
+            itemPrefab.Mp = hero.Stats.Mp;
+            itemPrefab.Description = "testzzzz";
+            Debug.Log("loadchars " + itemPrefab.CharacterName);
+            Debug.Log("name json " + hero.Name);
+            Debug.Log("name prespawn " + itemPrefab.CharacterName);
             inventoryManager.SpawnNewItem(itemPrefab, inventoryManager.inventorySlots[i]);
             i++;
         }

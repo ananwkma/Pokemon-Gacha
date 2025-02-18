@@ -10,7 +10,7 @@ public class InventoryManager : MonoBehaviour
 
     public InventorySlot[] inventorySlots;
     public GameObject inventoryItemPrefab;
-    public int selectedSlot = -1;
+    int selectedSlot = -1;
 
     public bool AddItem(Item item) {
         for (int i = 0; i < inventorySlots.Length; i++) {
@@ -25,8 +25,10 @@ public class InventoryManager : MonoBehaviour
     }
 
     public void SpawnNewItem(Item item, InventorySlot slot) {
+        // Debug.Log("name on spawn: " + item.CharacterName);
         GameObject newItemGo = Instantiate(inventoryItemPrefab, slot.transform);
-        InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
+        InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>(); 
+        inventoryItem.item = item;
         inventoryItem.InitializeItem(item);
     }
 
