@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
 public class SelectedCharacterManager : MonoBehaviour
 {
     [SerializeField] private Image CharacterRender;
@@ -12,7 +11,7 @@ public class SelectedCharacterManager : MonoBehaviour
     [SerializeField] private TMP_Text StatsText;
 
     void Start() {    
-        Item myCharacter = Player.selectedCharacter;
+        InventoryItem myCharacter = Player.selectedCharacter;
         CharacterNameText.text = myCharacter.CharacterName;
         CharacterRender.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + myCharacter.Title);
         StatsText.text = "HP: " + myCharacter.Hp + "\n" + 

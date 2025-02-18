@@ -7,14 +7,14 @@ using UnityEngine.EventSystems;
 public class CharacterCollectionItem : MonoBehaviour
 {
     Image characterIcon;
-    public Item myItem { get; set; }
+    public InventoryItem myItem { get; set; }
 
     void Awake()
     {
         characterIcon = GetComponent<Image>();
     }
 
-    public void Initialize(Item item)
+    public void Initialize(InventoryItem item)
     {
         myItem = item;
         characterIcon.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + item.Title);

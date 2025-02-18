@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class CharacterCollection : MonoBehaviour
 {
-    [SerializeField] private Item itemPrefab;
+    [SerializeField] private InventoryItem itemPrefab;
     public InventoryManager inventoryManager;
-    public Item[] itemsToPickup;
+    public InventoryItem[] itemsToPickup;
 
     string GetContainerTag(int sceneIndex) {
         switch (sceneIndex) {
@@ -32,10 +32,7 @@ public class CharacterCollection : MonoBehaviour
             itemPrefab.Def = hero.Stats.Def;
             itemPrefab.Hp = hero.Stats.Hp;
             itemPrefab.Mp = hero.Stats.Mp;
-            itemPrefab.Description = "testzzzz";
-            Debug.Log("loadchars " + itemPrefab.CharacterName);
-            Debug.Log("name json " + hero.Name);
-            Debug.Log("name prespawn " + itemPrefab.CharacterName);
+            
             inventoryManager.SpawnNewItem(itemPrefab, inventoryManager.inventorySlots[i]);
             i++;
         }

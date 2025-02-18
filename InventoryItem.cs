@@ -8,15 +8,9 @@ using TMPro;
 public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("UI")]
-    [SerializeField] private Image image;
+    public Image image;
 
-    // [SerializeField] private string NameString;
-    // [SerializeField] private string Title;
-    // [SerializeField] private int Atk;
-    // [SerializeField] private int Def;
-    // [SerializeField] private int Hp;
-    // [SerializeField] private int Mp;
-    public string NameString;
+    public string CharacterName;
     public string Title;
     public int Atk;
     public int Def;
@@ -24,21 +18,17 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public int Mp;
 
     [HideInInspector] public static Transform parentAfterDrag;
-    [HideInInspector] public Item item;
+    [HideInInspector] public InventoryItem item;
 
-    public void InitializeItem(Item newItem) {
-        ReassignProperties(newItem);
-        image.sprite = Resources.Load<Sprite>("Sprites/Icons/" + newItem.Title);
-    }
-
-    public void ReassignProperties(Item newItem) {
+    public void InitializeItem(InventoryItem newItem) {
         item = newItem;
-        NameString = newItem.CharacterName;
+        CharacterName = newItem.CharacterName;
         Title = newItem.Title;
         Atk = newItem.Atk;
         Def = newItem.Def;
         Hp = newItem.Hp;
         Mp = newItem.Mp;
+        image.sprite = Resources.Load<Sprite>("Sprites/Icons/" + newItem.Title);
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
@@ -58,7 +48,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void SetSelectedCharacter () {
         Player.selectedCharacter = item;
-        Player.selectedCharacter.CharacterName = NameString;
+        Player.selectedCharacter.CharacterName = CharacterName;
         Player.selectedCharacter.Title = Title;
         Player.selectedCharacter.Atk = Atk;
         Player.selectedCharacter.Def = Def;
