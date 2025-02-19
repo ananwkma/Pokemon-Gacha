@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
         
     [System.Serializable]
     public class CharacterCollection {
-        public List<Character> characterCollection = new List<Character>();
+        public Dictionary<int, Character> characterCollection = new Dictionary<int, Character>();
+        // public List<Character> characterCollection = new List<Character>();
         public void Add(Character character) {
             characterCollection.Add(character);
         }

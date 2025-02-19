@@ -26,7 +26,6 @@ public class CharacterIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     [HideInInspector] public static Transform parentAfterDrag;
     [HideInInspector] public CharacterIcon characterIcon;
-    public static List<Character> teamComp;
 
     public void InitializeCharacterIcon(CharacterIcon newCharacterIcon) {
         characterIcon = newCharacterIcon;
@@ -70,7 +69,6 @@ public class CharacterIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void ClearSelectedCharacter () {
         Player.selectedCharacter = null;
-        Debug.Log("clear " + Player.selectedCharacter);
     }
 
     public void AddToTeamComp () {
@@ -82,6 +80,7 @@ public class CharacterIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
 
     public void RemoveFromTeamComp () {
+        Player.PresetTeam.Remove(Char);
         // Player.PresetTeam.Add(Char);
         selectedButton.SetActive(false);
         // Debug.Log("Player.PresetTeam: " + JsonConvert.SerializeObject(Player.PresetTeam, Formatting.Indented));

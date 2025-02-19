@@ -9,7 +9,14 @@ using System.IO;
 public class CharacterCollectionScene : MonoBehaviour
 {
     [SerializeField] private CharacterIcon characterIconPrefab;
-    public CharacterCollectionManager characterCollectionManager;
+    public CharacterCollectionSlot[] characterCollectionSlots;
+    public GameObject characterIconGoPrefab;
+    
+    public void SpawnNewCharacterIcon(CharacterIcon characterIcon, CharacterCollectionSlot slot) {
+        GameObject newCharacterIconGo = Instantiate(characterIconGoPrefab, slot.transform);
+        CharacterIcon newCharacterIcon = newCharacterIconGo.GetComponent<CharacterIcon>(); 
+        newCharacterIcon.InitializeCharacterIcon(characterIcon);
+    }
 
     string GetContainerTag(int sceneIndex) {
         switch (sceneIndex) {
@@ -37,7 +44,7 @@ public class CharacterCollectionScene : MonoBehaviour
             characterIconPrefab.Char = hero;
             characterIconPrefab.Idx = i;
             
-            characterCollectionManager.SpawnNewCharacterIcon(characterIconPrefab, characterCollectionManager.characterCollectionSlots[i]);
+            SpawnNewCharacterIcon(characterIconPrefab, characterCollectionSlots[i]);
             i++;
         }
     }
