@@ -7,7 +7,6 @@ using System.IO;
 
 public class SaveData : MonoBehaviour
 {
-    public static CharacterCollection cc = new CharacterCollection();
     private IDataService DataService = new JsonDataService();
     private bool EncryptionEnabled;
 
@@ -16,10 +15,10 @@ public class SaveData : MonoBehaviour
     }
 
     public void SaveToJson() {
-        if (DataService.SaveData("/CharacterCollectionData.json", cc, EncryptionEnabled)) {
+        if (DataService.SaveData("/CharacterCollectionData.json", Player.cc, EncryptionEnabled)) {
             Debug.Log("Save success");
             try {
-                CharacterCollection data = DataService.LoadData<CharacterCollection>("/CharacterCollectionData.json", EncryptionEnabled);
+                Player.CharacterCollection data = DataService.LoadData<Player.CharacterCollection>("/CharacterCollectionData.json", EncryptionEnabled);
                 Debug.Log("Loaded:\r\n" + JsonConvert.SerializeObject(data, Formatting.Indented));
             }
             catch (Exception e) {
@@ -33,8 +32,8 @@ public class SaveData : MonoBehaviour
     }
 
     public void LoadFromJson() {
-        cc = DataService.LoadData<CharacterCollection>("/CharacterCollectionData.json", EncryptionEnabled);
-        // Debug.Log("Loaded:\r\n" + JsonConvert.SerializeObject(cc, Formatting.Indented));
+        Player.cc = DataService.LoadData<Player.CharacterCollection>("/CharacterCollectionData.json", EncryptionEnabled);
+        // Debug.Log("Loaded:\r\n" + JsonConvert.SerializeObject(Player.cc, Formatting.Indented));
     }
     
     void Awake()
@@ -49,14 +48,6 @@ public class SaveData : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.L)) {
             LoadFromJson();
-        }
-    }
-    
-    [System.Serializable]
-    public class CharacterCollection {
-        public List<Character> characterCollection = new List<Character>();
-        public void Add(Character character) {
-            characterCollection.Add(character);
         }
     }
 }

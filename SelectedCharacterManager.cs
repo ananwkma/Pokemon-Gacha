@@ -11,7 +11,7 @@ public class SelectedCharacterManager : MonoBehaviour
     [SerializeField] private TMP_Text StatsText;
 
     void Start() {    
-        InventoryItem myCharacter = Player.selectedCharacter;
+        CharacterIcon myCharacter = Player.selectedCharacter;
         CharacterNameText.text = myCharacter.CharacterName;
         CharacterRender.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + myCharacter.Title);
         StatsText.text = "HP: " + myCharacter.Hp + "\n" + 

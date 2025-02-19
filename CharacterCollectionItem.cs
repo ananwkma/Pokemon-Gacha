@@ -4,19 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CharacterCollectionItem : MonoBehaviour
+public class CharacterIconCollection : MonoBehaviour
 {
-    Image characterIcon;
-    public InventoryItem myItem { get; set; }
+    Image characterIconImage;
+    public CharacterIcon myCharacterIcon { get; set; }
 
     void Awake()
     {
-        characterIcon = GetComponent<Image>();
+        characterIconImage = GetComponent<Image>();
     }
 
-    public void Initialize(InventoryItem item)
+    public void Initialize(CharacterIcon characterIcon)
     {
-        myItem = item;
-        characterIcon.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + item.Title);
+        myCharacterIcon = characterIcon;
+        characterIconImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + characterIcon.Title);
     }
 }

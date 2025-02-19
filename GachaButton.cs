@@ -90,7 +90,7 @@ public class GachaButton : MonoBehaviour
             populateDescriptionText(roll);
             populateStars(roll);
 
-            SaveData.cc.Add(roll);
+            Player.cc.Add(roll);
 
             Player.gems -= 100;
             gems.text = Player.gems.ToString() + " Gems";
