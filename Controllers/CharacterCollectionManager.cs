@@ -24,6 +24,7 @@ public class CharacterCollectionManager : MonoBehaviour
         int teamSize = Player.PresetTeam.Count;
         SetCharacterIconPrefab(selectedCharacterIcon.Char, selectedCharacterIcon.Idx);
         SpawnNewCharacterIcon(characterIconPrefab, teamBuilderSlots[currentTeamSize]);
+        currentTeamSize++;
     }
 
     // public void RemoveFromTeamComp (CharacterIcon selectedCharacterIcon) {
@@ -45,7 +46,7 @@ public class CharacterCollectionManager : MonoBehaviour
         int i = 0;
         foreach (Character hero in Player.cc.characterCollection) {
             SetCharacterIconPrefab(hero, i);
-            SpawnNewCharacterIcon(characterIconPrefab, characterCollectionSlots[i]);
+            if (i < characterCollectionSlots.Length) SpawnNewCharacterIcon(characterIconPrefab, characterCollectionSlots[i]);
             i++;
         }
     }
@@ -60,6 +61,9 @@ public class CharacterCollectionManager : MonoBehaviour
     }
 
     void Update() {
-        
+        // if (Player.PresetTeam.Count > currentTeamSize) {
+            // AddToTeamComp(Player.PresetTeam[Player.PresetTeam.Count-1]);
+            // Debug.Log("added: " + Player.PresetTeam[Player.PresetTeam.Count-1]);
+        // }
     }
 }

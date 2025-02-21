@@ -84,16 +84,11 @@ public class CharacterIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
 
     public void AddToTeamComp () {
-            // Player.PresetTeam.Add(new KeyValuePair<int, Character>(Idx, Char));
         if (!Player.isMaxTeamSize()) {
             int idx = Player.PresetTeam.Count;
             Player.PresetTeam.Add(this);
             selectedButton.SetActive(true);
         } 
-        for (int i = 0 ; i < Player.PresetTeam.Count; i++ ) { 
-            Debug.Log("team: " + Player.PresetTeam[i].Title);
-        }
-        // Debug.Log("Player.PresetTeam: " + JsonConvert.SerializeObject(Player.PresetTeam, Formatting.Indented));
     }
 
     public void RemoveFromTeamComp () {
