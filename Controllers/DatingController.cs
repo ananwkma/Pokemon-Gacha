@@ -25,11 +25,13 @@ public class DatingController : MonoBehaviour
             Debug.Log("failed");
         }
         HideDialogue();
+
+        CharacterImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + Player.selectedCharacter.Title);
+        CharacterNameText.text = Player.selectedCharacter.CharacterName;
     }
     
     public void StartDialogue(string title, DialogueNode node) {
         ShowDialogue();
-        CharacterNameText.text = title;
         ConversationText.text = node.dialogueText;
 
         foreach (Transform child in responseButtonContainer) {
