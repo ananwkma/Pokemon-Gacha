@@ -28,7 +28,7 @@ public class CharacterCollectionSlot : MonoBehaviour, IDropHandler
     }
     
     public void OnClick(PointerEventData eventData) {
-        Debug.Log(eventData.button);
+        Debug.Log("CCS CLICKED");
         // ChangeSelectedSlot(number);
     }
 }

@@ -40,6 +40,18 @@ public class CharacterIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         image.sprite = Resources.Load<Sprite>("Sprites/Icons/" + newCharacterIcon.Title);
     }
 
+    public void SetCharacterIcon () {
+        characterIcon.CharacterName = CharacterName;
+        characterIcon.Title = Title;
+        characterIcon.Atk = Atk;
+        characterIcon.Def = Def;
+        characterIcon.Hp = Hp;
+        characterIcon.Mp = Mp;
+        characterIcon.Idx = Idx;
+        characterIcon.Char = Char;
+        characterIcon.image = image;
+    }
+
     public void OnBeginDrag(PointerEventData eventData) {
         image.raycastTarget = false;
         parentAfterDrag = transform.parent;
@@ -72,15 +84,18 @@ public class CharacterIcon : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
 
     public void AddToTeamComp () {
+            // Player.PresetTeam.Add(new KeyValuePair<int, Character>(Idx, Char));
         if (!Player.isMaxTeamSize()) {
-            Player.PresetTeam.Add(Char);
+            // int idx = Player.PresetTeam.Count;
+            // SetCharacterIcon();
+            // Player.PresetTeam.Add(characterIcon);
             selectedButton.SetActive(true);
-            Debug.Log("Player.PresetTeam: " + JsonConvert.SerializeObject(Player.PresetTeam, Formatting.Indented));
         } 
+        // Debug.Log("team: " + Player.PresetTeam[0].Title);
     }
 
     public void RemoveFromTeamComp () {
-        Player.PresetTeam.Remove(Char);
+        // Player.PresetTeam.Remove(new KeyValuePair<int, Character>(Idx, Char);
         // Player.PresetTeam.Add(Char);
         selectedButton.SetActive(false);
         // Debug.Log("Player.PresetTeam: " + JsonConvert.SerializeObject(Player.PresetTeam, Formatting.Indented));
