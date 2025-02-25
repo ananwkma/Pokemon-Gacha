@@ -13,12 +13,19 @@ public class Player : MonoBehaviour
         
     [System.Serializable]
     public class CharacterCollection {
+        // public List<CharacterIcon> PresetTeam = new List<CharacterIcon>();
         public List<Character> characterCollection = new List<Character>();
+
         public void Add(Character character) {
             characterCollection.Add(character);
         }
-        public void Count(Character character) {
-            characterCollection.Add(character);
+        
+        public void AddToTeam(CharacterIcon characterIcon) {
+            PresetTeam.Add(characterIcon);
+        }
+
+        public void Count() {
+            // characterCollection.Count;
         }
     }
 

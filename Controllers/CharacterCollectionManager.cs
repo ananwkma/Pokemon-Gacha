@@ -21,10 +21,14 @@ public class CharacterCollectionManager : MonoBehaviour
     }
 
     public void AddToTeamComp (CharacterIcon selectedCharacterIcon) {
+        Debug.Log("test3");
         int teamSize = Player.PresetTeam.Count;
+        Debug.Log("teamSize: " + teamSize);
         SetCharacterIconPrefab(selectedCharacterIcon.Char, selectedCharacterIcon.Idx);
+        Debug.Log("Charset: " + characterIconPrefab.Title);
         SpawnNewCharacterIcon(characterIconPrefab, teamBuilderSlots[currentTeamSize]);
         currentTeamSize++;
+        Debug.Log("currentTeamSize: " + currentTeamSize);
     }
 
     // public void RemoveFromTeamComp (CharacterIcon selectedCharacterIcon) {
