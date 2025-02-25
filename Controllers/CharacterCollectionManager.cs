@@ -13,6 +13,12 @@ public class CharacterCollectionManager : MonoBehaviour
     public int currentTeamSize = 0;
     public CharacterCollectionSlot[] characterCollectionSlots;
     public CharacterIcon characterIconGoPrefab;
+
+    private static CharacterCollectionManager instance;
+    
+    public static CharacterCollectionManager GetInstance() {
+        return instance;
+    }
     
     public void SpawnNewCharacterIcon(CharacterIcon characterIcon, CharacterCollectionSlot slot) {
         CharacterIcon newCharacterIconGo = Instantiate(characterIconPrefab, slot.transform);

@@ -8,21 +8,36 @@ public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
 public class BattleSystem : MonoBehaviour
 {
-    public GameObject playerPrefab;
-    public GameObject enemyPrefab;
+    public HeroSlot playerPrefab;
+    public HeroSlot enemyPrefab;
 
     public Transform playerBattleStation;
     public Transform enemyBattleStation;
 
     Unit playerUnit;
     Unit enemyUnit;
+    
+    private GameObject hero;
+    private GameObject enemy;
 
     public TMP_Text dialogueText;
 
-    public BattleHUD playerHUD;
-    public BattleHUD enemyHUD;
-
     public BattleState state;
+
+    private int turnCount = 0;
+    private int numberOfHeroesAlive = Player.PresetTeam.Count;
+    private int movesRemaining = Player.PresetTeam.Count;
+    public static List<Character> enemies = new List<Character>();
+    private int numberOfEnemiesAlive = enemies.Count;
+    [SerializeField] private Transform HeroContainer;
+    [SerializeField] private HeroSlot heroSlotPrefab;
+
+
+    void Awake()
+    {
+        hero = GameObject.FindGameObjectWithTag("Hero");
+        enemy = GameObject.FindGameObjectWithTag("Enemy");
+    }
 
     void Start()
     {
@@ -31,16 +46,21 @@ public class BattleSystem : MonoBehaviour
     }
 
     IEnumerator SetupBattle() {
-        GameObject playerGO = Instantiate(playerPrefab, playerBattleStation);
-        playerUnit = playerGO.GetComponent<Unit>();
+        foreach (CharacterIcon hero in Player.PresetTeam) {
+            HeroSlot playerGO = Instantiate(heroSlotPrefab, playerBattleStation);
+            playerUnit = playerGO.GetComponent<Unit>();
+            playerUnit.unitName = hero.Char.Name;
+            playerUnit.maxHP = hero.Char.Stats.Hp;
+            playerUnit.currentHP = hero.Char.Stats.Hp;
+            playerGO.SetHUD(playerUnit);
+            playerGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
+        }
 
-        GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
+        HeroSlot enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
         enemyUnit = enemyGO.GetComponent<Unit>();
+        enemyGO.SetHUD(enemyUnit);
 
         dialogueText.text = "A wild " + enemyUnit.unitName + " has appeared!";
-
-        playerHUD.SetHUD(playerUnit);
-        enemyHUD.SetHUD(enemyUnit);
 
         yield return new WaitForSeconds(2f);
 
@@ -51,7 +71,7 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PlayerAttack() {
         bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
 
-        enemyHUD.SetHP(enemyUnit.currentHP);
+        // enemyUnit.SetHP(enemyUnit.currentHP);
         dialogueText.text = "The attack is successful";
 
         yield return new WaitForSeconds(2f);
@@ -73,7 +93,7 @@ public class BattleSystem : MonoBehaviour
 
         bool isDead = playerUnit.TakeDamage(enemyUnit.damage);
 
-        playerHUD.SetHP(playerUnit.currentHP);
+        // playerUnit.SetHP(playerUnit.currentHP);
 
         yield return new WaitForSeconds(1f);
 
@@ -90,7 +110,7 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PlayerHeal() {
         playerUnit.Heal(5);
 
-        playerHUD.SetHP(playerUnit.currentHP);
+        // playerUnit.SetHP(playerUnit.currentHP);
         dialogueText.text = "You feel renewed strength!";
 
         yield return new WaitForSeconds(2f);
