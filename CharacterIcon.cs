@@ -24,8 +24,6 @@ public class CharacterIcon : MonoBehaviour
 
     public void SetSelectedCharacter () {
         Player.selectedCharacter = Char;
-        Debug.Log("Player.selectedCharacter " + JsonConvert.SerializeObject(Player.selectedCharacter, Formatting.Indented));
-        Debug.Log("Char " + JsonConvert.SerializeObject(Char, Formatting.Indented));
     }
 
     public void ClearSelectedCharacter () {
@@ -34,8 +32,8 @@ public class CharacterIcon : MonoBehaviour
 
     public void AddToTeamComp () {
         if (!Player.isMaxTeamSize()) {
-            int idx = Player.PresetTeam.Count;
-            Player.PresetTeam.Add(this);
+            int idx = Player.cc.PresetTeam.Count;
+            Player.cc.PresetTeam.Add(Char);
             selectedButton.SetActive(true);
         } 
     }

@@ -25,8 +25,8 @@ public class BattleSystem : MonoBehaviour
     public BattleState state;
 
     private int turnCount = 0;
-    private int numberOfHeroesAlive = Player.PresetTeam.Count;
-    private int movesRemaining = Player.PresetTeam.Count;
+    private int numberOfHeroesAlive = Player.cc.PresetTeam.Count;
+    private int movesRemaining = Player.cc.PresetTeam.Count;
     public static List<Character> enemies = new List<Character>();
     private int numberOfEnemiesAlive = enemies.Count;
     [SerializeField] private Transform HeroContainer;
@@ -39,14 +39,14 @@ public class BattleSystem : MonoBehaviour
     }
 
     IEnumerator SetupBattle() {
-        foreach (CharacterIcon hero in Player.PresetTeam) {
+        foreach (Character hero in Player.cc.PresetTeam) {
             HeroSlot playerGO = Instantiate(heroSlotPrefab, playerBattleStation);
             playerUnit = playerGO.GetComponent<Unit>();
-            playerUnit.unitName = hero.Char.Name;
-            playerUnit.maxHP = hero.Char.Stats.Hp;
-            playerUnit.currentHP = hero.Char.Stats.Hp;
+            playerUnit.unitName = hero.Name;
+            playerUnit.maxHP = hero.Stats.Hp;
+            playerUnit.currentHP = hero.Stats.Hp;
             playerGO.SetHUD(playerUnit);
-            playerGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Char.Title);
+            playerGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
         }
 
         HeroSlot enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
