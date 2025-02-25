@@ -9,7 +9,8 @@ public class Player : MonoBehaviour
     public static List<CharacterIcon> PresetTeam = new List<CharacterIcon>();
 
     public static int gems = 100000;
-    public static CharacterIcon selectedCharacter;
+    // public static CharacterIcon selectedCharacter;
+    public static Character selectedCharacter;
         
     [System.Serializable]
     public class CharacterCollection {

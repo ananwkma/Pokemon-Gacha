@@ -32,13 +32,6 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private Transform HeroContainer;
     [SerializeField] private HeroSlot heroSlotPrefab;
 
-
-    void Awake()
-    {
-        hero = GameObject.FindGameObjectWithTag("Hero");
-        enemy = GameObject.FindGameObjectWithTag("Enemy");
-    }
-
     void Start()
     {
         state = BattleState.START;
@@ -53,7 +46,7 @@ public class BattleSystem : MonoBehaviour
             playerUnit.maxHP = hero.Char.Stats.Hp;
             playerUnit.currentHP = hero.Char.Stats.Hp;
             playerGO.SetHUD(playerUnit);
-            playerGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
+            playerGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Char.Title);
         }
 
         HeroSlot enemyGO = Instantiate(enemyPrefab, enemyBattleStation);

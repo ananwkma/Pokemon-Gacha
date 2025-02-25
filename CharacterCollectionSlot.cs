@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CharacterCollectionSlot : MonoBehaviour, IDropHandler
+public class CharacterCollectionSlot : MonoBehaviour
 {    
     public Image image;
     public Color selectedColor, notSelectedColor;
@@ -17,14 +17,6 @@ public class CharacterCollectionSlot : MonoBehaviour, IDropHandler
     public void Select() {
         selected = !selected;
         image.color = (selected ? selectedColor : notSelectedColor);
-    }
-
-    public void OnDrop(PointerEventData eventData) {
-        if (transform.childCount == 0) {
-            // GameObject dropped = eventData.pointerDrag;
-            CharacterIcon characterIcon = eventData.pointerDrag.GetComponent<CharacterIcon>();
-            CharacterIcon.parentAfterDrag = transform;
-        }
     }
     
     public void OnClick(PointerEventData eventData) {

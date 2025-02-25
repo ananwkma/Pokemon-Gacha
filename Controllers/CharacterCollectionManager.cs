@@ -15,26 +15,22 @@ public class CharacterCollectionManager : MonoBehaviour
     public CharacterIcon characterIconGoPrefab;
 
     private static CharacterCollectionManager instance;
-    
+
     public static CharacterCollectionManager GetInstance() {
         return instance;
     }
     
-    public void SpawnNewCharacterIcon(CharacterIcon characterIcon, CharacterCollectionSlot slot) {
-        CharacterIcon newCharacterIconGo = Instantiate(characterIconPrefab, slot.transform);
-        CharacterIcon newCharacterIcon = newCharacterIconGo.GetComponent<CharacterIcon>(); 
-        newCharacterIcon.InitializeCharacterIcon(characterIcon);
+    public void SpawnNewCharacterIcon(Character character, int idx, CharacterCollectionSlot[] array) {
+        CharacterIcon newCharacterIconGo = Instantiate(characterIconPrefab, array[idx].transform);
+        // CharacterIcon newCharacterIcon = newCharacterIconGo.GetComponent<CharacterIcon>(); 
+        newCharacterIconGo.InitializeCharacterIcon(character, idx);
     }
 
     public void AddToTeamComp (CharacterIcon selectedCharacterIcon) {
-        Debug.Log("test3");
         int teamSize = Player.PresetTeam.Count;
-        Debug.Log("teamSize: " + teamSize);
         SetCharacterIconPrefab(selectedCharacterIcon.Char, selectedCharacterIcon.Idx);
-        Debug.Log("Charset: " + characterIconPrefab.Title);
-        SpawnNewCharacterIcon(characterIconPrefab, teamBuilderSlots[currentTeamSize]);
+        SpawnNewCharacterIcon(selectedCharacterIcon.Char, currentTeamSize, teamBuilderSlots);
         currentTeamSize++;
-        Debug.Log("currentTeamSize: " + currentTeamSize);
     }
 
     // public void RemoveFromTeamComp (CharacterIcon selectedCharacterIcon) {
@@ -42,12 +38,6 @@ public class CharacterCollectionManager : MonoBehaviour
     // }
 
     public void SetCharacterIconPrefab(Character character, int i) {
-        characterIconPrefab.Title = character.Title;
-        characterIconPrefab.CharacterName = character.Name;
-        characterIconPrefab.Atk = character.Stats.Atk;
-        characterIconPrefab.Def = character.Stats.Def;
-        characterIconPrefab.Hp = character.Stats.Hp;
-        characterIconPrefab.Mp = character.Stats.Mp;
         characterIconPrefab.Char = character;
         characterIconPrefab.Idx = i;
     }
@@ -56,7 +46,7 @@ public class CharacterCollectionManager : MonoBehaviour
         int i = 0;
         foreach (Character hero in Player.cc.characterCollection) {
             SetCharacterIconPrefab(hero, i);
-            if (i < characterCollectionSlots.Length) SpawnNewCharacterIcon(characterIconPrefab, characterCollectionSlots[i]);
+            if (i < characterCollectionSlots.Length) SpawnNewCharacterIcon(hero, i, characterCollectionSlots);
             i++;
         }
     }

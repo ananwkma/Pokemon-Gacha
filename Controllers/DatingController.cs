@@ -27,7 +27,7 @@ public class DatingController : MonoBehaviour
         HideDialogue();
 
         CharacterImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + Player.selectedCharacter.Title);
-        CharacterNameText.text = Player.selectedCharacter.CharacterName;
+        CharacterNameText.text = Player.selectedCharacter.Name;
     }
     
     public void StartDialogue(string title, DialogueNode node) {
