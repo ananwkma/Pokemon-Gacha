@@ -6,10 +6,8 @@ public class Player : MonoBehaviour
 {
     private static int TEAM_SIZE_MAX = 4;
     public static CharacterCollection cc = new CharacterCollection();
-    // public static List<CharacterIcon> PresetTeam = new List<CharacterIcon>();
 
     public static int gems = 100000;
-    // public static CharacterIcon selectedCharacter;
     public static Character selectedCharacter;
         
     [System.Serializable]
@@ -23,10 +21,6 @@ public class Player : MonoBehaviour
         
         public void AddToTeam(Character character) {
             PresetTeam.Add(character);
-        }
-
-        public void Count() {
-            // characterCollection.Count;
         }
     }
 

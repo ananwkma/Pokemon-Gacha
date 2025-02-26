@@ -15,6 +15,12 @@ public class CharacterIcon : MonoBehaviour
     public GameObject selectedButton;
     public int Idx;
     public Character Char;
+    public CharacterCollectionManager ccm;
+
+    void Start() {
+        ccm = GameObject.FindWithTag("CCM").GetComponent<CharacterCollectionManager>();
+        Debug.Log("Get CCM " + GameObject.FindWithTag("CCM"));
+    }
 
     public void InitializeCharacterIcon(Character newCharacter, int idx) {
         Idx = idx;
@@ -34,6 +40,7 @@ public class CharacterIcon : MonoBehaviour
         if (!Player.isMaxTeamSize()) {
             int idx = Player.cc.PresetTeam.Count;
             Player.cc.PresetTeam.Add(Char);
+            ccm.AddToTeamComp(Char);
             selectedButton.SetActive(true);
         } 
     }

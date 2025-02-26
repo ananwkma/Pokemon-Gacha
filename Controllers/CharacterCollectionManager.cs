@@ -19,7 +19,7 @@ public class CharacterCollectionManager : MonoBehaviour
     public static CharacterCollectionManager GetInstance() {
         return instance;
     }
-    
+
     public void SpawnNewCharacterIcon(Character character, int idx, CharacterCollectionSlot[] array) {
         CharacterIcon newCharacterIconGo = Instantiate(characterIconPrefab, array[idx].transform);
         newCharacterIconGo.InitializeCharacterIcon(character, idx);
@@ -27,7 +27,6 @@ public class CharacterCollectionManager : MonoBehaviour
 
     public void AddToTeamComp (Character selectedCharacter) {
         int teamSize = Player.cc.PresetTeam.Count;
-        // SetCharacterIconPrefab(selectedCharacter, );
         SpawnNewCharacterIcon(selectedCharacter, currentTeamSize, teamBuilderSlots);
         currentTeamSize++;
     }
@@ -50,19 +49,15 @@ public class CharacterCollectionManager : MonoBehaviour
         }
     }
 
-    void ClearTeam() {
- 
-    }
-
     void Start()
     {
         LoadCharacters();
     }
 
     void Update() {
-        if (Player.cc.PresetTeam.Count > currentTeamSize) {
-            AddToTeamComp(Player.cc.PresetTeam[Player.cc.PresetTeam.Count-1]);
-            Debug.Log("added: " + Player.cc.PresetTeam[Player.cc.PresetTeam.Count-1]);
-        }
+        // if (Player.cc.PresetTeam.Count > currentTeamSize) {
+        //     AddToTeamComp(Player.cc.PresetTeam[Player.cc.PresetTeam.Count-1]);
+        //     Debug.Log("added: " + Player.cc.PresetTeam[Player.cc.PresetTeam.Count-1]);
+        // }
     }
 }
