@@ -16,6 +16,7 @@ public class CharacterIcon : MonoBehaviour
     public int Idx;
     public Character Char;
     public CharacterCollectionManager ccm;
+    public int id;
 
     void Start() {
         ccm = GameObject.FindWithTag("CCM").GetComponent<CharacterCollectionManager>();
@@ -25,6 +26,7 @@ public class CharacterIcon : MonoBehaviour
     public void InitializeCharacterIcon(Character newCharacter, int idx) {
         Idx = idx;
         Char = newCharacter;
+        Debug.Log("id at instantiate: " + id);
         image.sprite = Resources.Load<Sprite>("Sprites/Icons/" + newCharacter.Title);
     }
 
@@ -41,15 +43,17 @@ public class CharacterIcon : MonoBehaviour
             int idx = Player.cc.PresetTeam.Count;
             Player.cc.PresetTeam.Add(Char);
             ccm.AddToTeamComp(Char);
+            id = this.GetInstanceID();
+            Debug.Log("id: " + id);
             selectedButton.SetActive(true);
         } 
     }
 
     public void RemoveFromTeamComp () {
-        // Player.PresetTeam.Remove(new KeyValuePair<int, Character>(Idx, Char);
-        // Player.PresetTeam.Add(Char);
-        selectedButton.SetActive(false);
-        // Debug.Log("Player.PresetTeam: " + JsonConvert.SerializeObject(Player.PresetTeam, Formatting.Indented));
+        Player.cc.PresetTeam.Remove(Char);
+        ccm.RemoveFromTeamComp(this);
+        Destroy(this.gameObject);
+        Destroy(this);
     }
     
 }
