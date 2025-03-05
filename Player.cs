@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public static Character selectedCharacter;
     
     public static int[] battleProgress = new int[] { 1, 3 };
+    public static int worldIndex = battleProgress[0]-1;
+    public static int levelIndex = battleProgress[1]-1;
         
     [System.Serializable]
     public class CharacterCollection {
@@ -47,5 +49,9 @@ public class Player : MonoBehaviour
             if (cc.PresetTeam[i] != null) count++;
         }
         return count < TEAM_SIZE_MAX ? false : true;
+    }
+    
+    public static Checkpoint GetCurrentCheckpoint() {
+        return BattleMapDatabase.allWorlds[worldIndex][levelIndex];
     }
 }

@@ -16,14 +16,11 @@ public class BattleSystem : MonoBehaviour
         return instance;
     }
 
-    public HeroSlot playerPrefab;
-    public HeroSlot enemyPrefab;
+    public CharacterBattlePortrait heroPrefab;
+    public CharacterBattlePortrait enemyPrefab;
 
     public Transform playerBattleStation;
     public Transform enemyBattleStation;
-    
-    private GameObject hero;
-    private GameObject enemy;
 
     public TMP_Text dialogueText;
 
@@ -31,15 +28,12 @@ public class BattleSystem : MonoBehaviour
 
     private int turnCount = 0;
 
-    private int numberOfHeroesAlive = Player.cc.PresetTeam.Count;
-    private int movesRemaining = Player.cc.PresetTeam.Count;
+    private int numberOfHeroesAlive;
+    private int numberOfEnemiesAlive;
+    private int movesRemaining;
 
-    public static List<HeroSlot> heroList = new List<HeroSlot>();
-    public static List<HeroSlot> enemiesList = new List<HeroSlot>();
-
-    private int numberOfEnemiesAlive = enemiesList.Count;
-    [SerializeField] private Transform HeroContainer;
-    [SerializeField] private HeroSlot heroSlotPrefab;
+    public static List<CharacterBattlePortrait> heroList = new List<CharacterBattlePortrait>();
+    public static List<CharacterBattlePortrait> enemiesList = new List<CharacterBattlePortrait>();
 
     void Start()
     {
@@ -50,24 +44,26 @@ public class BattleSystem : MonoBehaviour
     IEnumerator SetupBattle() {
         foreach (Character hero in Player.cc.PresetTeam) {
             // Debug.Log("presetteam " + JsonConvert.SerializeObject(hero, Formatting.Indented));
-            HeroSlot playerGO = Instantiate(heroSlotPrefab, playerBattleStation);
-            playerGO.thisChar = hero;
-            playerGO.SetHUD();
-            playerGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
-            heroList.Add(playerGO);
+            CharacterBattlePortrait heroGO = Instantiate(heroPrefab, playerBattleStation);
+            heroGO.thisChar = hero;
+            heroGO.SetHUD();
+            heroGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
+            heroList.Add(heroGO);
         }
 
-        int worldIndex = Player.battleProgress[0]-1;
-        int levelIndex = Player.battleProgress[1]-1;
-        Checkpoint currentCheckPoint = BattleMapDatabase.allWorlds[worldIndex][levelIndex];
+        Checkpoint currentCheckPoint = Player.GetCurrentCheckpoint();
 
         foreach (Character enemy in currentCheckPoint.Enemies) {            
-            HeroSlot enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
+            CharacterBattlePortrait enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
             enemyGO.thisChar = enemy;
             enemyGO.SetHUD();
             enemyGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + enemy.Title);
             enemiesList.Add(enemyGO);
         }
+
+        numberOfHeroesAlive = Player.cc.PresetTeam.Count;
+        numberOfEnemiesAlive = enemiesList.Count;
+        movesRemaining = Player.cc.PresetTeam.Count;
 
         yield return new WaitForSeconds(2f);
 

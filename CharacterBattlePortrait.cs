@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Newtonsoft.Json;
 
-public class HeroSlot : MonoBehaviour
+public class CharacterBattlePortrait : MonoBehaviour
 {
     public Image heroImage;
     public TMP_Text nameText;
@@ -13,7 +13,7 @@ public class HeroSlot : MonoBehaviour
     public Slider hpSlider;
     public BattleSystem bs;
     public Character thisChar;
-    public Button heroSlotButton;
+    public Button characterButton;
 
     void Start() {
         bs = GameObject.FindWithTag("BS").GetComponent<BattleSystem>();
@@ -40,14 +40,14 @@ public class HeroSlot : MonoBehaviour
     }
 
     public void Disable() {
-        heroSlotButton.interactable = false;
+        characterButton.interactable = false;
         Color diabledColor = heroImage.color;
         diabledColor.a = 0.3f; 
         heroImage.color = diabledColor;
     }
     
     public void Enable() {
-        heroSlotButton.interactable = true;
+        characterButton.interactable = true;
         Color enabledColor = heroImage.color;
         enabledColor.a = 1.0f; 
         heroImage.color = enabledColor;

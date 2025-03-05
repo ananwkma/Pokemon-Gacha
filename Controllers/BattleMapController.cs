@@ -9,7 +9,7 @@ public class BattleMapController : MonoBehaviour
     public CheckpointObject checkpointGOPrefab;
     [SerializeField] private Transform checkpointGOContainer;
 
-    void Start() {
+    void Awake() {
         int worldIndex = Player.battleProgress[0]-1;
         int levelIndex = Player.battleProgress[1]-1;
 
@@ -23,7 +23,7 @@ public class BattleMapController : MonoBehaviour
             }
              
             CheckpointObject checkpointGO = Instantiate(checkpointGOPrefab, checkpointGOContainer);
-            checkpointGO.thisCheckpoint = checkpoint;
+            checkpointGO.Initialize(checkpoint);
         }
     }
 }
