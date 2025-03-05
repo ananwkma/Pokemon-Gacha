@@ -22,12 +22,5 @@ public class SelectedCharacterManager : MonoBehaviour
                 "MP: " + myCharacter.Stats.Mp + "\n" + 
                 "ATK: " + myCharacter.Stats.Atk + "\n" + 
                 "DEF: " + myCharacter.Stats.Def;
-        // CharacterIcon myCharacter = Player.selectedCharacter;
-        // CharacterNameText.text = myCharacter.Char.Name;
-        // CharacterRender.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + myCharacter.Char.Title);
-        // StatsText.text = "HP: " + myCharacter.Char.Stats.Hp + "\n" + 
-        //         "MP: " + myCharacter.Char.Stats.Mp + "\n" + 
-        //         "ATK: " + myCharacter.Char.Stats.Atk + "\n" + 
-        //         "DEF: " + myCharacter.Char.Stats.Def;
     }
 }

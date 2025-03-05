@@ -20,13 +20,11 @@ public class CharacterIcon : MonoBehaviour
 
     void Start() {
         ccm = GameObject.FindWithTag("CCM").GetComponent<CharacterCollectionManager>();
-        Debug.Log("Get CCM " + GameObject.FindWithTag("CCM"));
     }
 
     public void InitializeCharacterIcon(Character newCharacter, int idx) {
         Idx = idx;
         Char = newCharacter;
-        Debug.Log("id at instantiate: " + id);
         image.sprite = Resources.Load<Sprite>("Sprites/Icons/" + newCharacter.Title);
     }
 
@@ -41,17 +39,17 @@ public class CharacterIcon : MonoBehaviour
     public void AddToTeamComp () {
         if (!Player.isMaxTeamSize()) {
             int idx = Player.cc.PresetTeam.Count;
-            Player.cc.PresetTeam.Add(Char);
+            Player.cc.AddToTeam(Char);
             ccm.AddToTeamComp(Char);
             id = this.GetInstanceID();
-            Debug.Log("id: " + id);
             selectedButton.SetActive(true);
         } 
     }
 
     public void RemoveFromTeamComp () {
-        Player.cc.PresetTeam.Remove(Char);
-        ccm.RemoveFromTeamComp(this);
+        Player.cc.PresetTeam[Player.cc.PresetTeam.IndexOf(Char)] = null;
+        
+        ccm.RemoveFromTeamComp(Char);
         Destroy(this.gameObject);
         Destroy(this);
     }

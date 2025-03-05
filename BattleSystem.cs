@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Newtonsoft.Json;
+
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
 public class BattleSystem : MonoBehaviour
 {
+    private static BattleSystem instance;
+
+    public static BattleSystem GetInstance() {
+        return instance;
+    }
+
     public HeroSlot playerPrefab;
     public HeroSlot enemyPrefab;
 
     public Transform playerBattleStation;
     public Transform enemyBattleStation;
-
-    Unit playerUnit;
-    Unit enemyUnit;
     
     private GameObject hero;
     private GameObject enemy;
@@ -25,10 +30,14 @@ public class BattleSystem : MonoBehaviour
     public BattleState state;
 
     private int turnCount = 0;
+
     private int numberOfHeroesAlive = Player.cc.PresetTeam.Count;
     private int movesRemaining = Player.cc.PresetTeam.Count;
-    public static List<Character> enemies = new List<Character>();
-    private int numberOfEnemiesAlive = enemies.Count;
+
+    public static List<HeroSlot> heroList = new List<HeroSlot>();
+    public static List<HeroSlot> enemiesList = new List<HeroSlot>();
+
+    private int numberOfEnemiesAlive = enemiesList.Count;
     [SerializeField] private Transform HeroContainer;
     [SerializeField] private HeroSlot heroSlotPrefab;
 
@@ -40,20 +49,25 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetupBattle() {
         foreach (Character hero in Player.cc.PresetTeam) {
+            // Debug.Log("presetteam " + JsonConvert.SerializeObject(hero, Formatting.Indented));
             HeroSlot playerGO = Instantiate(heroSlotPrefab, playerBattleStation);
-            playerUnit = playerGO.GetComponent<Unit>();
-            playerUnit.unitName = hero.Name;
-            playerUnit.maxHP = hero.Stats.Hp;
-            playerUnit.currentHP = hero.Stats.Hp;
-            playerGO.SetHUD(playerUnit);
+            playerGO.thisChar = hero;
+            playerGO.SetHUD();
             playerGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
+            heroList.Add(playerGO);
         }
 
-        HeroSlot enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
-        enemyUnit = enemyGO.GetComponent<Unit>();
-        enemyGO.SetHUD(enemyUnit);
+        int worldIndex = Player.battleProgress[0]-1;
+        int levelIndex = Player.battleProgress[1]-1;
+        Checkpoint currentCheckPoint = BattleMapDatabase.allWorlds[worldIndex][levelIndex];
 
-        dialogueText.text = "A wild " + enemyUnit.unitName + " has appeared!";
+        foreach (Character enemy in currentCheckPoint.Enemies) {            
+            HeroSlot enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
+            enemyGO.thisChar = enemy;
+            enemyGO.SetHUD();
+            enemyGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + enemy.Title);
+            enemiesList.Add(enemyGO);
+        }
 
         yield return new WaitForSeconds(2f);
 
@@ -61,49 +75,53 @@ public class BattleSystem : MonoBehaviour
         PlayerTurn();
     }
     
-    IEnumerator PlayerAttack() {
-        bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
+    public IEnumerator PlayerAttack() {
+        // bool isDead = enemyChar.TakeDamage(playerChar.Stats.Atk);
 
-        // enemyUnit.SetHP(enemyUnit.currentHP);
+        // enemyChar.SetHP(enemyChar.currentHP);
         dialogueText.text = "The attack is successful";
 
         yield return new WaitForSeconds(2f);
         
-        if (isDead) {
-            state = BattleState.WON;
-            EndBattle();
-        }
-        else {
+        if (movesRemaining == 0) {
             state = BattleState.ENEMYTURN;
             StartCoroutine(EnemyTurn());
         }
+        // if (isDead) {
+        //     state = BattleState.WON;
+        //     EndBattle();
+        // }
+        // else {
+        //     state = BattleState.ENEMYTURN;
+        //     StartCoroutine(EnemyTurn());
+        // }
     }
     
     IEnumerator EnemyTurn() {
-        dialogueText.text = enemyUnit.unitName + " attacks";
+        // dialogueText.text = enemyChar.Name + " attacks";
 
         yield return new WaitForSeconds(1f);
 
-        bool isDead = playerUnit.TakeDamage(enemyUnit.damage);
+        // bool isDead = playerChar.TakeDamage(enemyChar.Stats.Atk);
 
-        // playerUnit.SetHP(playerUnit.currentHP);
+        // playerChar.SetHP(playerChar.currentHP);
 
         yield return new WaitForSeconds(1f);
 
-        if (isDead) {
-            state = BattleState.LOST;
-            EndBattle();
-        }
-        else {
-            state = BattleState.PLAYERTURN;
-            PlayerTurn();
-        }
+        // if (isDead) {
+        //     state = BattleState.LOST;
+        //     EndBattle();
+        // }
+        // else {
+        //     state = BattleState.PLAYERTURN;
+        //     PlayerTurn();
+        // }
     }
 
     IEnumerator PlayerHeal() {
-        playerUnit.Heal(5);
+        // playerChar.Heal(5);
 
-        // playerUnit.SetHP(playerUnit.currentHP);
+        // playerChar.SetHP(playerChar.currentHP);
         dialogueText.text = "You feel renewed strength!";
 
         yield return new WaitForSeconds(2f);

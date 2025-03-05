@@ -84,7 +84,9 @@ public class GachaButton : MonoBehaviour
 
     public void GachaButtonPress() {
         if (Player.gems >= 100) {
-            Character roll = GetRoll(GetRNG());
+            Character roll = GetRoll(GetRNG()).Clone();
+            roll.Id = System.Guid.NewGuid().ToString();
+
             disableStars();
             updateCharacterObject(roll);
             populateDescriptionText(roll);

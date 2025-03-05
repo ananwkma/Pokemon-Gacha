@@ -23,6 +23,7 @@ public class CharacterCollectionManager : MonoBehaviour
 
     public void SpawnNewCharacterIcon(Character character, int idx, CharacterCollectionSlot[] array) {
         if (array == teamBuilderSlots) {
+            idx = FindNextAvailableSlot();
             CharacterIcon newCharacterIconGo = Instantiate(teamIconGoPrefab, array[idx].transform);
             newCharacterIconGo.InitializeCharacterIcon(character, idx);
         }
@@ -38,19 +39,22 @@ public class CharacterCollectionManager : MonoBehaviour
         currentTeamSize++;
     }
 
-    public void RemoveFromTeamComp (CharacterIcon selectedCharacterIcon) {
-        Debug.Log("test: " + characterCollectionSlots[0].transform.GetChild(0).GetComponent<CharacterIcon>());
-        Debug.Log("test2: " + selectedCharacterIcon);
-        // selectedcharicon and charicon in the array are not the same (char icon vs charicononteam) 
-        // add id to add
+    public void RemoveFromTeamComp (Character selectedCharacter) {
         for (int i = 0; i < Player.cc.characterCollection.Count; i++) {
-                Debug.Log("idx: " + i);
-            if (characterCollectionSlots[i].transform.GetChild(0).GetComponent<CharacterIcon>() == selectedCharacterIcon) {
-                Debug.Log("Found match!");
-                // characterCollectionSlots[i].transform.GetChild(0).selectedButton.SetActive(false);
+            if (characterCollectionSlots[i].transform.GetChild(0).GetComponent<CharacterIcon>().Char.Id == selectedCharacter.Id) {
+                characterCollectionSlots[i].transform.GetChild(0).GetComponent<CharacterIcon>().selectedButton.SetActive(false);
             }
         }        
         currentTeamSize--;
+    }
+
+    public int FindNextAvailableSlot () {
+        for (int i = 0; i < teamBuilderSlots.Length; i++) {
+            if (teamBuilderSlots[i].transform.childCount == 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void SetCharacterIconPrefab(Character character, int i) {

@@ -21,7 +21,7 @@ public class JsonDataService : IDataService
             using FileStream stream = File.Create(path);
             stream.Close();
             File.WriteAllText(path, JsonConvert.SerializeObject(Data));
-            Debug.Log(path);
+            Debug.Log("Wrote file in: " + path);
             return true;
             
         }
