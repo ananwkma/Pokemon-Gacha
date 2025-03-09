@@ -52,7 +52,7 @@ public class CharacterBattlePortrait : MonoBehaviour
     }
 
     public void Attack() {
-        bs.StartCoroutine(bs.PlayerAttack(thisCharBD.GetAtk()));
+        bs.PlayerAttack(thisCharBD.GetAtk());
         Disable();
     }
 

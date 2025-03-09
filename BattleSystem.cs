@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Newtonsoft.Json;
 using System;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
@@ -11,32 +10,23 @@ public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 public class BattleSystem : MonoBehaviour
 {
     private static BattleSystem instance;
-
-    public static BattleSystem GetInstance() {
-        return instance;
-    }
+    public static BattleSystem GetInstance() => instance;
 
     public CharacterBattlePortrait charBPPrefab;
-
-    public Transform playerBattleStation;
-    public Transform enemyBattleStation;
-
+    public Transform playerBattleStation, enemyBattleStation;
     public TMP_Text dialogueText;
-
+    public Image EndScreen;
     public BattleState state;
 
-    // private int turnCount = 0;
-
-    private int numberOfHeroesAlive;
-    private int numberOfEnemiesAlive;
-    private int movesRemaining;
-
+    private int numberOfHeroesAlive, numberOfEnemiesAlive, movesRemaining;
     public static List<CharacterBattlePortrait> heroList = new List<CharacterBattlePortrait>();
     public static List<CharacterBattlePortrait> enemiesList = new List<CharacterBattlePortrait>();
 
     void Start()
     {
+        instance = this;
         state = BattleState.START;
+        EndScreen.gameObject.SetActive(false);
         heroList.Clear();
         enemiesList.Clear();
         StartCoroutine(SetupBattle());
@@ -44,10 +34,7 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator SetupBattle() {
         PopulateCharacters(Player.cc.PresetTeam, playerBattleStation, heroList);
-
-        Checkpoint currentCheckPoint = Player.GetCurrentCheckpoint();
-        
-        PopulateCharacters(currentCheckPoint.Enemies, enemyBattleStation, enemiesList);
+        PopulateCharacters(Player.GetCurrentCheckpoint().Enemies, enemyBattleStation, enemiesList);
 
         numberOfHeroesAlive = Player.cc.PresetTeam.Count;
         numberOfEnemiesAlive = enemiesList.Count;
@@ -70,7 +57,7 @@ public class BattleSystem : MonoBehaviour
         }
     }
     
-    public IEnumerator PlayerAttack(int atk) {
+    public void PlayerAttack(int atk) {
 
         CharacterBattlePortrait selectedEnemyBP = enemiesList[0];
         CharacterBattleData selectedEnemyBD = enemiesList[0].thisCharBD;
@@ -82,9 +69,6 @@ public class BattleSystem : MonoBehaviour
 
         movesRemaining--;
 
-    
-        yield return new WaitForSeconds(2f);
-        
         updateAliveEnemies();
 
         if (movesRemaining == 0 && numberOfEnemiesAlive > 0) {
@@ -116,6 +100,7 @@ public class BattleSystem : MonoBehaviour
     }
 
     void EndBattle() {
+        EndScreen.gameObject.SetActive(true);
         if (state == BattleState.WON) {
             dialogueText.text = "You won the battle!";
             Player.IncrementCheckpoint();
