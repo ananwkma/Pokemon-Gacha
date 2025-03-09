@@ -10,7 +10,6 @@ public class Player : MonoBehaviour
     public static int gems = 100000;
     public static Character selectedCharacter;
     
-    // public static int[] battleProgress = new int[] { 1, 3 };
     public static int worldIndex = 0;
     public static int levelIndex = 2;
         

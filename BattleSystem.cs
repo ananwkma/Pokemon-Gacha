@@ -43,25 +43,11 @@ public class BattleSystem : MonoBehaviour
     }
 
     IEnumerator SetupBattle() {
-        foreach (Character hero in Player.cc.PresetTeam) {
-            CharacterBattlePortrait heroBP = Instantiate(charBPPrefab, playerBattleStation);
-            // Debug.Log("heroGO " + JsonConvert.SerializeObject(heroBP.thisCharBD, Formatting.Indented));
-            heroBP.Initialize(hero);
-            heroBP.SetHUD();
-            heroBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
-            heroList.Add(heroBP);
-        }
+        PopulateCharacters(Player.cc.PresetTeam, playerBattleStation, heroList);
 
         Checkpoint currentCheckPoint = Player.GetCurrentCheckpoint();
-
-        foreach (Character enemy in currentCheckPoint.Enemies) {            
-            CharacterBattlePortrait enemyBP = Instantiate(charBPPrefab, enemyBattleStation);
-            enemyBP.Initialize(enemy);
-
-            enemyBP.SetHUD();
-            enemyBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + enemy.Title);
-            enemiesList.Add(enemyBP);
-        }
+        
+        PopulateCharacters(currentCheckPoint.Enemies, enemyBattleStation, enemiesList);
 
         numberOfHeroesAlive = Player.cc.PresetTeam.Count;
         numberOfEnemiesAlive = enemiesList.Count;
@@ -72,16 +58,17 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.PLAYERTURN;
         PlayerTurn();
     }
-    // void PopulateCharacters(List<Character> charList, Transform battleStation) {
-    //     foreach (Character thisChar in charList) {
-    //         CharacterBattlePortrait charBP = Instantiate(charBPPrefab, battleStation);
-    //         charBP.Initialize(thisChar);
 
-    //         charBP.SetHUD();
-    //         charBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + thisChar.Title);
-    //         charList.Add(thisChar);
-    //     }
-    // }
+    void PopulateCharacters(List<Character> charList, Transform battleStation, List<CharacterBattlePortrait> charBPList) {
+        foreach (Character thisChar in charList) {
+            CharacterBattlePortrait charBP = Instantiate(charBPPrefab, battleStation);
+            charBP.Initialize(thisChar);
+
+            charBP.SetHUD();
+            charBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + thisChar.Title);
+            charBPList.Add(charBP);
+        }
+    }
     
     public IEnumerator PlayerAttack(int atk) {
 
