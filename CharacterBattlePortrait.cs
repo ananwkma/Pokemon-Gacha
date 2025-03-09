@@ -17,11 +17,20 @@ public class CharacterBattlePortrait : MonoBehaviour
     public CharacterBattleData charBDPrefab;
     public Character thisChar;    
     public CharacterBattleData thisCharBD;
+    public bool isHero;
+    public Button enemySelection;
+
 
 
     void Awake() {
         Enable();
         bs = GameObject.FindWithTag("BS").GetComponent<BattleSystem>();
+        if (isHero) {
+            enemySelection.interactable = false;
+        }
+        else {
+            enemySelection.onClick.AddListener(OnEnemyClick);
+        }
     }
 
     public void Initialize(Character character)
@@ -31,6 +40,10 @@ public class CharacterBattlePortrait : MonoBehaviour
         thisCharBD.SetCharBD(thisChar);
 
         SetHUD();
+    }
+
+    void OnEnemyClick() {
+        BattleSystem.GetInstance().OnEnemySelected(this);
     }
 
     public void SetHUD() {

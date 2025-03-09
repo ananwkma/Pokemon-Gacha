@@ -17,6 +17,7 @@ public class BattleSystem : MonoBehaviour
     public TMP_Text dialogueText;
     public Image EndScreen;
     public BattleState state;
+    CharacterBattlePortrait selectedEnemyBP;
 
     private int numberOfHeroesAlive, numberOfEnemiesAlive, movesRemaining;
     public static List<CharacterBattlePortrait> heroList = new List<CharacterBattlePortrait>();
@@ -33,8 +34,8 @@ public class BattleSystem : MonoBehaviour
     }
 
     IEnumerator SetupBattle() {
-        PopulateCharacters(Player.cc.PresetTeam, playerBattleStation, heroList);
-        PopulateCharacters(Player.GetCurrentCheckpoint().Enemies, enemyBattleStation, enemiesList);
+        PopulateCharacters(Player.cc.PresetTeam, playerBattleStation, heroList, true);
+        PopulateCharacters(Player.GetCurrentCheckpoint().Enemies, enemyBattleStation, enemiesList, false);
 
         numberOfHeroesAlive = heroList.Count;
         numberOfEnemiesAlive = enemiesList.Count;
@@ -46,18 +47,19 @@ public class BattleSystem : MonoBehaviour
         PlayerTurn();
     }
 
-    void PopulateCharacters(List<Character> charList, Transform battleStation, List<CharacterBattlePortrait> charBPList) {
+    void PopulateCharacters(List<Character> charList, Transform battleStation, List<CharacterBattlePortrait> charBPList, bool isHero) {
         foreach (Character thisChar in charList) {
             CharacterBattlePortrait charBP = Instantiate(charBPPrefab, battleStation);
             charBP.Initialize(thisChar);
             charBP.SetHUD();
             charBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + thisChar.Title);
+            charBP.isHero = isHero;
             charBPList.Add(charBP);
         }
     }
     
     public void PlayerAttack(int atk) {
-        CharacterBattlePortrait selectedEnemyBP = enemiesList[0];
+        CharacterBattlePortrait selectedEnemyBP = getNextAliveCharacter(enemiesList);
         CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
 
         int damage = CalculateDamage(atk, selectedEnemyBD.GetDef());
@@ -78,11 +80,10 @@ public class BattleSystem : MonoBehaviour
     IEnumerator EnemyTurn() {
         if (state != BattleState.ENEMYTURN) yield break;
         
-        CharacterBattlePortrait selectedEnemyBP = enemiesList[0];
+        CharacterBattlePortrait selectedEnemyBP = getNextAliveCharacter(enemiesList);
         CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
-        CharacterBattlePortrait selectedHeroBP = getNextAliveHero();
+        CharacterBattlePortrait selectedHeroBP = getNextAliveCharacter(heroList);
 
-        Debug.Log("nextAlive: " + getNextAliveHero());
         if (selectedHeroBP != null)
         {
             CharacterBattleData selectedHeroBD = selectedHeroBP.thisCharBD;
@@ -121,8 +122,8 @@ public class BattleSystem : MonoBehaviour
         return (int)Math.Floor(atk * (1000 / (1000 + (def / 2.5))));
     }
 
-    CharacterBattlePortrait getNextAliveHero() {
-        return heroList.Find(charBP => charBP.thisCharBD.state != charState.DEAD);
+    CharacterBattlePortrait getNextAliveCharacter(List<CharacterBattlePortrait> charList) {
+        return charList.Find(charBP => charBP.thisCharBD.state != charState.DEAD);
     }
 
     void updateAliveHeroes() {
@@ -157,5 +158,17 @@ public class BattleSystem : MonoBehaviour
             EndBattle();
         }
 
+    }
+
+    public void OnEnemySelected(CharacterBattlePortrait selectedEnemyBP)
+    {
+        // if (selectedEnemyBP.isHero) return;
+        
+        // CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
+
+        // if (selectedEnemyBD.state != charState.DEAD)
+        // {
+        //     StartCoroutine(PlayerAttack(CalculateDamage(10, selectedEnemyBD.GetDef()), selectedEnemyBP));
+        // }
     }
 }
