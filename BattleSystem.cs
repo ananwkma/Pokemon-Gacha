@@ -36,9 +36,9 @@ public class BattleSystem : MonoBehaviour
         PopulateCharacters(Player.cc.PresetTeam, playerBattleStation, heroList);
         PopulateCharacters(Player.GetCurrentCheckpoint().Enemies, enemyBattleStation, enemiesList);
 
-        numberOfHeroesAlive = Player.cc.PresetTeam.Count;
+        numberOfHeroesAlive = heroList.Count;
         numberOfEnemiesAlive = enemiesList.Count;
-        movesRemaining = Player.cc.PresetTeam.Count;
+        movesRemaining = heroList.Count;
 
         yield return new WaitForSeconds(2f);
 
@@ -50,7 +50,6 @@ public class BattleSystem : MonoBehaviour
         foreach (Character thisChar in charList) {
             CharacterBattlePortrait charBP = Instantiate(charBPPrefab, battleStation);
             charBP.Initialize(thisChar);
-
             charBP.SetHUD();
             charBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + thisChar.Title);
             charBPList.Add(charBP);
@@ -58,15 +57,14 @@ public class BattleSystem : MonoBehaviour
     }
     
     public void PlayerAttack(int atk) {
-
         CharacterBattlePortrait selectedEnemyBP = enemiesList[0];
-        CharacterBattleData selectedEnemyBD = enemiesList[0].thisCharBD;
+        CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
+
         int damage = CalculateDamage(atk, selectedEnemyBD.GetDef());
         selectedEnemyBD.TakeDamage(damage);
         selectedEnemyBP.SetHP(damage);
 
         dialogueText.text = "The attack is successful";
-
         movesRemaining--;
 
         updateAliveEnemies();
@@ -78,16 +76,19 @@ public class BattleSystem : MonoBehaviour
     }
     
     IEnumerator EnemyTurn() {
-        if (state == BattleState.ENEMYTURN) {
-            CharacterBattlePortrait selectedEnemyBP = enemiesList[0];
-            CharacterBattleData selectedEnemyBD = enemiesList[0].thisCharBD;
+        if (state != BattleState.ENEMYTURN) yield break;
+        
+        CharacterBattlePortrait selectedEnemyBP = enemiesList[0];
+        CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
+        CharacterBattlePortrait selectedHeroBP = getNextAliveHero();
 
-            CharacterBattlePortrait selectedHeroBP = getNextAliveHero();
-            CharacterBattleData selectedHeroBD = getNextAliveHero().thisCharBD;
+        Debug.Log("nextAlive: " + getNextAliveHero());
+        if (selectedHeroBP != null)
+        {
+            CharacterBattleData selectedHeroBD = selectedHeroBP.thisCharBD;
 
             int damage = CalculateDamage(selectedEnemyBD.GetAtk(), selectedHeroBD.GetDef());
-
-            dialogueText.text = selectedEnemyBD.thisChar.Name + " attacks!";
+            dialogueText.text = $"{selectedEnemyBD.thisChar.Name} attacks!";
 
             yield return new WaitForSeconds(1f);
 
@@ -95,18 +96,20 @@ public class BattleSystem : MonoBehaviour
             selectedHeroBP.SetHP(damage);
 
             updateAliveHeroes();
-            movesRemaining = numberOfHeroesAlive;
+            movesRemaining = numberOfHeroesAlive;        
+        }
+        else
+        {
+            Debug.Log("No heroes are alive.");
         }
     }
 
     void EndBattle() {
         EndScreen.gameObject.SetActive(true);
+
+        dialogueText.text = state == BattleState.WON ? "You won the battle!" : "You were defeated";
         if (state == BattleState.WON) {
-            dialogueText.text = "You won the battle!";
             Player.IncrementCheckpoint();
-        }
-        else if (state == BattleState.LOST) {
-            dialogueText.text = "You were defeated";
         }
     }
 
@@ -119,48 +122,40 @@ public class BattleSystem : MonoBehaviour
     }
 
     CharacterBattlePortrait getNextAliveHero() {
-        int i = 0;
-        foreach (CharacterBattlePortrait charBP in heroList) {
-            if (heroList[i].thisCharBD.state != charState.DEAD && i < 4) {
-                return heroList[i];
-            }
-            i++;
-        }
-        return heroList[3];
+        return heroList.Find(charBP => charBP.thisCharBD.state != charState.DEAD);
     }
 
     void updateAliveHeroes() {
-        int i = 0;
+        int aliveCount = 0;
+        
         foreach (CharacterBattlePortrait charBP in heroList) {
             CharacterBattleData thisCharBD = charBP.thisCharBD;
+            
             if (thisCharBD.state != charState.DEAD) {
                 charBP.Enable();
-                i++;
+                aliveCount++;
             }
         }
-        numberOfHeroesAlive = i;
+        
+        numberOfHeroesAlive = aliveCount;
+
         if (numberOfHeroesAlive == 0) {
             state = BattleState.LOST;
             EndBattle();
-        }
-        else {
+        } else {
             state = BattleState.PLAYERTURN;
             PlayerTurn();
         }
     }
 
     void updateAliveEnemies() {
-        int i = 0;
-        foreach (CharacterBattlePortrait charBP in enemiesList) {
-            CharacterBattleData thisCharBD = charBP.thisCharBD;
-            if (thisCharBD.state != charState.DEAD) {
-                i++;
-            }
-        }
-        numberOfEnemiesAlive = i;
-        if (numberOfEnemiesAlive == 0) {
+        numberOfEnemiesAlive = enemiesList.FindAll(charBP => charBP.thisCharBD.state != charState.DEAD).Count;
+
+        if (numberOfEnemiesAlive == 0)
+        {
             state = BattleState.WON;
             EndBattle();
         }
+
     }
 }
