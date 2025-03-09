@@ -10,10 +10,14 @@ public class Player : MonoBehaviour
     public static int gems = 100000;
     public static Character selectedCharacter;
     
-    public static int[] battleProgress = new int[] { 1, 3 };
-    public static int worldIndex = battleProgress[0]-1;
-    public static int levelIndex = battleProgress[1]-1;
+    // public static int[] battleProgress = new int[] { 1, 3 };
+    public static int worldIndex = 0;
+    public static int levelIndex = 2;
         
+    void Awake() {
+        UpdateCheckpointIndices();
+    }
+
     [System.Serializable]
     public class CharacterCollection {
         public List<Character> PresetTeam = new List<Character>();
@@ -53,5 +57,20 @@ public class Player : MonoBehaviour
     
     public static Checkpoint GetCurrentCheckpoint() {
         return BattleMapDatabase.allWorlds[worldIndex][levelIndex];
+    }
+
+    public static void UpdateCheckpointIndices() {
+        // worldIndex = battleProgress[0]-1;
+        // levelIndex = battleProgress[1]-1;
+    }
+
+    public static void IncrementCheckpoint() {
+        if (BattleMapDatabase.allWorlds[worldIndex][levelIndex + 1] != null) {
+            levelIndex++;
+        }
+        else if (BattleMapDatabase.allWorlds[worldIndex + 1][0] != null) {
+            levelIndex = 0;
+            worldIndex++;
+        }
     }
 }

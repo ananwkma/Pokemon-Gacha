@@ -8,35 +8,57 @@ using Newtonsoft.Json;
 public class CharacterBattlePortrait : MonoBehaviour
 {
     public Image heroImage;
+    public Image DeadImage;
     public TMP_Text nameText;
     public TMP_Text HPText;
     public Slider hpSlider;
-    public BattleSystem bs;
-    public Character thisChar;
     public Button characterButton;
+    public BattleSystem bs;    
+    public CharacterBattleData charBDPrefab;
+    public Character thisChar;    
+    public CharacterBattleData thisCharBD;
 
-    void Start() {
-        bs = GameObject.FindWithTag("BS").GetComponent<BattleSystem>();
+
+    void Awake() {
         Enable();
+        bs = GameObject.FindWithTag("BS").GetComponent<BattleSystem>();
+    }
+
+    public void Initialize(Character character)
+    {
+        thisChar = character;
+        thisCharBD = Instantiate(charBDPrefab, transform);
+        thisCharBD.SetCharBD(thisChar);
+
+        SetHUD();
     }
 
     public void SetHUD() {
         // Debug.Log("thisChar " + JsonConvert.SerializeObject(thisChar, Formatting.Indented));
-        thisChar.CurrentHP = thisChar.Stats.Hp;
-        thisChar.MaxHP = thisChar.Stats.Hp;
         nameText.text = thisChar.Name;
-        HPText.text = thisChar.CurrentHP + "/" + thisChar.MaxHP;
-        hpSlider.maxValue = thisChar.MaxHP;
-        hpSlider.value = thisChar.CurrentHP;
+        HPText.text = thisCharBD.CurrentHP + " / " + thisCharBD.MaxHP;
+        hpSlider.maxValue = thisCharBD.MaxHP;
+        hpSlider.value = thisCharBD.CurrentHP;
     }
 
-    public void SetHP(int hp) {
-        hpSlider.value = hp;
+    public void SetHP(int dmg) {
+        hpSlider.value -= dmg;
+        if (thisCharBD.CurrentHP < 0) {
+            HPText.text  = 0 + " / " + thisCharBD.MaxHP;
+        }
+        else {
+            HPText.text = thisCharBD.CurrentHP + " / " + thisCharBD.MaxHP;
+        }
     }
 
     public void Attack() {
-        bs.StartCoroutine(bs.PlayerAttack());
+        bs.StartCoroutine(bs.PlayerAttack(thisCharBD.GetAtk()));
         Disable();
+    }
+
+    public void Dead() {
+        Disable();
+        DeadImage.gameObject.SetActive(true);
     }
 
     public void Disable() {

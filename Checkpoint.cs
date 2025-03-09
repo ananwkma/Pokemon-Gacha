@@ -7,17 +7,17 @@ public class Checkpoint
 {
     private int world;
     private int level;
-    private Character[] enemies;
+    private List<Character> enemies;
     private bool completed;
 
     public int World { get; set; }
     public int Level { get; set; }
-    public Character[] Enemies { get; set; }
+    public List<Character> Enemies { get; set; }
     public bool Completed { get; set; }
 
     public Checkpoint() { }
     
-    public Checkpoint(int world, int level, Character[] enemies, bool completed)
+    public Checkpoint(int world, int level, List<Character> enemies, bool completed)
     {
         World = world;
         Level = level;

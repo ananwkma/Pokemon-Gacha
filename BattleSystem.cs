@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Newtonsoft.Json;
-
+using System;
 
 public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
@@ -16,8 +16,7 @@ public class BattleSystem : MonoBehaviour
         return instance;
     }
 
-    public CharacterBattlePortrait heroPrefab;
-    public CharacterBattlePortrait enemyPrefab;
+    public CharacterBattlePortrait charBPPrefab;
 
     public Transform playerBattleStation;
     public Transform enemyBattleStation;
@@ -26,7 +25,7 @@ public class BattleSystem : MonoBehaviour
 
     public BattleState state;
 
-    private int turnCount = 0;
+    // private int turnCount = 0;
 
     private int numberOfHeroesAlive;
     private int numberOfEnemiesAlive;
@@ -38,27 +37,30 @@ public class BattleSystem : MonoBehaviour
     void Start()
     {
         state = BattleState.START;
+        heroList.Clear();
+        enemiesList.Clear();
         StartCoroutine(SetupBattle());
     }
 
     IEnumerator SetupBattle() {
         foreach (Character hero in Player.cc.PresetTeam) {
-            // Debug.Log("presetteam " + JsonConvert.SerializeObject(hero, Formatting.Indented));
-            CharacterBattlePortrait heroGO = Instantiate(heroPrefab, playerBattleStation);
-            heroGO.thisChar = hero;
-            heroGO.SetHUD();
-            heroGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
-            heroList.Add(heroGO);
+            CharacterBattlePortrait heroBP = Instantiate(charBPPrefab, playerBattleStation);
+            // Debug.Log("heroGO " + JsonConvert.SerializeObject(heroBP.thisCharBD, Formatting.Indented));
+            heroBP.Initialize(hero);
+            heroBP.SetHUD();
+            heroBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + hero.Title);
+            heroList.Add(heroBP);
         }
 
         Checkpoint currentCheckPoint = Player.GetCurrentCheckpoint();
 
         foreach (Character enemy in currentCheckPoint.Enemies) {            
-            CharacterBattlePortrait enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
-            enemyGO.thisChar = enemy;
-            enemyGO.SetHUD();
-            enemyGO.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + enemy.Title);
-            enemiesList.Add(enemyGO);
+            CharacterBattlePortrait enemyBP = Instantiate(charBPPrefab, enemyBattleStation);
+            enemyBP.Initialize(enemy);
+
+            enemyBP.SetHUD();
+            enemyBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + enemy.Title);
+            enemiesList.Add(enemyBP);
         }
 
         numberOfHeroesAlive = Player.cc.PresetTeam.Count;
@@ -70,65 +72,66 @@ public class BattleSystem : MonoBehaviour
         state = BattleState.PLAYERTURN;
         PlayerTurn();
     }
-    
-    public IEnumerator PlayerAttack() {
-        // bool isDead = enemyChar.TakeDamage(playerChar.Stats.Atk);
+    // void PopulateCharacters(List<Character> charList, Transform battleStation) {
+    //     foreach (Character thisChar in charList) {
+    //         CharacterBattlePortrait charBP = Instantiate(charBPPrefab, battleStation);
+    //         charBP.Initialize(thisChar);
 
-        // enemyChar.SetHP(enemyChar.currentHP);
+    //         charBP.SetHUD();
+    //         charBP.heroImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + thisChar.Title);
+    //         charList.Add(thisChar);
+    //     }
+    // }
+    
+    public IEnumerator PlayerAttack(int atk) {
+
+        CharacterBattlePortrait selectedEnemyBP = enemiesList[0];
+        CharacterBattleData selectedEnemyBD = enemiesList[0].thisCharBD;
+        int damage = CalculateDamage(atk, selectedEnemyBD.GetDef());
+        selectedEnemyBD.TakeDamage(damage);
+        selectedEnemyBP.SetHP(damage);
+
         dialogueText.text = "The attack is successful";
 
+        movesRemaining--;
+
+    
         yield return new WaitForSeconds(2f);
         
-        if (movesRemaining == 0) {
+        updateAliveEnemies();
+
+        if (movesRemaining == 0 && numberOfEnemiesAlive > 0) {
             state = BattleState.ENEMYTURN;
             StartCoroutine(EnemyTurn());
         }
-        // if (isDead) {
-        //     state = BattleState.WON;
-        //     EndBattle();
-        // }
-        // else {
-        //     state = BattleState.ENEMYTURN;
-        //     StartCoroutine(EnemyTurn());
-        // }
     }
     
     IEnumerator EnemyTurn() {
-        // dialogueText.text = enemyChar.Name + " attacks";
+        if (state == BattleState.ENEMYTURN) {
+            CharacterBattlePortrait selectedEnemyBP = enemiesList[0];
+            CharacterBattleData selectedEnemyBD = enemiesList[0].thisCharBD;
 
-        yield return new WaitForSeconds(1f);
+            CharacterBattlePortrait selectedHeroBP = getNextAliveHero();
+            CharacterBattleData selectedHeroBD = getNextAliveHero().thisCharBD;
 
-        // bool isDead = playerChar.TakeDamage(enemyChar.Stats.Atk);
+            int damage = CalculateDamage(selectedEnemyBD.GetAtk(), selectedHeroBD.GetDef());
 
-        // playerChar.SetHP(playerChar.currentHP);
+            dialogueText.text = selectedEnemyBD.thisChar.Name + " attacks!";
 
-        yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1f);
 
-        // if (isDead) {
-        //     state = BattleState.LOST;
-        //     EndBattle();
-        // }
-        // else {
-        //     state = BattleState.PLAYERTURN;
-        //     PlayerTurn();
-        // }
-    }
+            selectedHeroBD.TakeDamage(damage);
+            selectedHeroBP.SetHP(damage);
 
-    IEnumerator PlayerHeal() {
-        // playerChar.Heal(5);
-
-        // playerChar.SetHP(playerChar.currentHP);
-        dialogueText.text = "You feel renewed strength!";
-
-        yield return new WaitForSeconds(2f);
-
-        state = BattleState.ENEMYTURN;
-        StartCoroutine(EnemyTurn());
+            updateAliveHeroes();
+            movesRemaining = numberOfHeroesAlive;
+        }
     }
 
     void EndBattle() {
         if (state == BattleState.WON) {
             dialogueText.text = "You won the battle!";
+            Player.IncrementCheckpoint();
         }
         else if (state == BattleState.LOST) {
             dialogueText.text = "You were defeated";
@@ -139,17 +142,53 @@ public class BattleSystem : MonoBehaviour
         dialogueText.text = "Choose an action:";
     }
 
-    public void OnAttackButton() {
-        if (state != BattleState.PLAYERTURN) {
-            return;
-        }
-        StartCoroutine(PlayerAttack());
+    int CalculateDamage(int atk, int def) {
+        return (int)Math.Floor(atk * (1000 / (1000 + (def / 2.5))));
     }
 
-    public void OnHealButton() {
-        if (state != BattleState.PLAYERTURN) {
-            return;
+    CharacterBattlePortrait getNextAliveHero() {
+        int i = 0;
+        foreach (CharacterBattlePortrait charBP in heroList) {
+            if (heroList[i].thisCharBD.state != charState.DEAD && i < 4) {
+                return heroList[i];
+            }
+            i++;
         }
-        StartCoroutine(PlayerHeal());
+        return heroList[3];
+    }
+
+    void updateAliveHeroes() {
+        int i = 0;
+        foreach (CharacterBattlePortrait charBP in heroList) {
+            CharacterBattleData thisCharBD = charBP.thisCharBD;
+            if (thisCharBD.state != charState.DEAD) {
+                charBP.Enable();
+                i++;
+            }
+        }
+        numberOfHeroesAlive = i;
+        if (numberOfHeroesAlive == 0) {
+            state = BattleState.LOST;
+            EndBattle();
+        }
+        else {
+            state = BattleState.PLAYERTURN;
+            PlayerTurn();
+        }
+    }
+
+    void updateAliveEnemies() {
+        int i = 0;
+        foreach (CharacterBattlePortrait charBP in enemiesList) {
+            CharacterBattleData thisCharBD = charBP.thisCharBD;
+            if (thisCharBD.state != charState.DEAD) {
+                i++;
+            }
+        }
+        numberOfEnemiesAlive = i;
+        if (numberOfEnemiesAlive == 0) {
+            state = BattleState.WON;
+            EndBattle();
+        }
     }
 }

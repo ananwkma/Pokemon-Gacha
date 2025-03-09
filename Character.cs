@@ -11,17 +11,11 @@ public class Character
     private Stats stats;
     [SerializeField] private string id;
 
-    private int currentHP;
-    private int maxHP;
-
     public string Name { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public string Id { get; set; }
     public Stats Stats { get; set; }
-
-    public int CurrentHP { get; set; }
-    public int MaxHP { get; set; }
 
     public Character() { }
     
@@ -62,29 +56,6 @@ public class Character
     public Character Clone()
     {
         return new Character(this);
-    }
-
-    public bool TakeDamage(int dmg) {
-        CurrentHP -= dmg;
-
-        if (CurrentHP <= 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public void Heal(int amount) {
-        CurrentHP += amount;
-        if (CurrentHP > MaxHP)  {
-            CurrentHP = MaxHP; 
-        }
-    }
-
-    public void SetFullHp() {        
-        maxHP = this.Stats.Hp;
-        currentHP = this.Stats.Hp;
     }
 }
 
@@ -130,4 +101,17 @@ public class Stats
         Mp = clone.Mp;
         Rarity = clone.Rarity;
     }
+}
+
+public class Buffs {
+    public int AtkBuff;
+    public int DefBuff;
+    public int HPMaxBuff;
+    public int MPMaxBuff;
+    public int HPRecBuff;
+    public int MPRecBuff; 
+}
+
+public class Abilities {
+
 }

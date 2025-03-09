@@ -10,8 +10,8 @@ public class BattleMapController : MonoBehaviour
     [SerializeField] private Transform checkpointGOContainer;
 
     void Awake() {
-        int worldIndex = Player.battleProgress[0]-1;
-        int levelIndex = Player.battleProgress[1]-1;
+        int worldIndex = Player.worldIndex;
+        int levelIndex = Player.levelIndex;
 
         currentCheckPoint = BattleMapDatabase.allWorlds[worldIndex][levelIndex];
 
