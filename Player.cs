@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     public static Character selectedCharacter;
     
     public static int worldIndex = 0;
-    public static int levelIndex = 2;
+    public static int levelIndex = 4;
         
     void Awake() {
         UpdateCheckpointIndices();
@@ -64,10 +64,13 @@ public class Player : MonoBehaviour
     }
 
     public static void IncrementCheckpoint() {
-        if (BattleMapDatabase.allWorlds[worldIndex][levelIndex + 1] != null) {
+        if (levelIndex < BattleMapDatabase.allWorlds[worldIndex].Length-1) {
             levelIndex++;
+            Debug.Log("worldIndex " + worldIndex);
+            Debug.Log("levelIndex " + levelIndex);
+            Debug.Log("BattleMapDatabase.allWorlds " + (BattleMapDatabase.allWorlds[worldIndex][levelIndex + 1]==null));
         }
-        else if (BattleMapDatabase.allWorlds[worldIndex + 1][0] != null) {
+        else if (worldIndex < BattleMapDatabase.allWorlds.Length-1) {
             levelIndex = 0;
             worldIndex++;
         }

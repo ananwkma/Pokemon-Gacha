@@ -9,26 +9,37 @@ public class CharacterBattlePortrait : MonoBehaviour
 {
     public Image heroImage;
     public Image DeadImage;
+    public Image selectedImage;
+
     public TMP_Text nameText;
     public TMP_Text HPText;
+
     public Slider hpSlider;
+
     public Button characterButton;
+    public Button enemySelection;
+
     public BattleSystem bs;    
     public CharacterBattleData charBDPrefab;
     public Character thisChar;    
     public CharacterBattleData thisCharBD;
     public bool isHero;
-    public Button enemySelection;
 
 
 
     void Awake() {
         Enable();
         bs = GameObject.FindWithTag("BS").GetComponent<BattleSystem>();
+    }
+
+    void Start() {
         if (isHero) {
-            enemySelection.interactable = false;
+            enemySelection.gameObject.SetActive(false);
+            characterButton.interactable = true;
         }
         else {
+            enemySelection.gameObject.SetActive(true);
+            characterButton.interactable = false;
             enemySelection.onClick.AddListener(OnEnemyClick);
         }
     }
@@ -52,6 +63,7 @@ public class CharacterBattlePortrait : MonoBehaviour
         HPText.text = thisCharBD.CurrentHP + " / " + thisCharBD.MaxHP;
         hpSlider.maxValue = thisCharBD.MaxHP;
         hpSlider.value = thisCharBD.CurrentHP;
+        Deselected();
     }
 
     public void SetHP(int dmg) {
@@ -69,8 +81,20 @@ public class CharacterBattlePortrait : MonoBehaviour
         Disable();
     }
 
+    public void Selected() {
+        if (!isHero) {
+            selectedImage.gameObject.SetActive(true);
+        }
+    }
+
+    public void Deselected() {
+        selectedImage.gameObject.SetActive(false);
+    }
+
     public void Dead() {
         Disable();
+        Deselected();
+        bs.DeselectAllEnemies();
         DeadImage.gameObject.SetActive(true);
     }
 

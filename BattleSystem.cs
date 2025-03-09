@@ -17,7 +17,7 @@ public class BattleSystem : MonoBehaviour
     public TMP_Text dialogueText;
     public Image EndScreen;
     public BattleState state;
-    CharacterBattlePortrait selectedEnemyBP;
+    CharacterBattlePortrait selectedEnemyToAttack;
 
     private int numberOfHeroesAlive, numberOfEnemiesAlive, movesRemaining;
     public static List<CharacterBattlePortrait> heroList = new List<CharacterBattlePortrait>();
@@ -60,6 +60,11 @@ public class BattleSystem : MonoBehaviour
     
     public void PlayerAttack(int atk) {
         CharacterBattlePortrait selectedEnemyBP = getNextAliveCharacter(enemiesList);
+
+        if (selectedEnemyToAttack != null) {
+            selectedEnemyBP = selectedEnemyToAttack;
+        }
+
         CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
 
         int damage = CalculateDamage(atk, selectedEnemyBD.GetDef());
@@ -162,13 +167,22 @@ public class BattleSystem : MonoBehaviour
 
     public void OnEnemySelected(CharacterBattlePortrait selectedEnemyBP)
     {
-        // if (selectedEnemyBP.isHero) return;
+        if (selectedEnemyBP.isHero) return;
         
-        // CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
+        CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
 
-        // if (selectedEnemyBD.state != charState.DEAD)
-        // {
-        //     StartCoroutine(PlayerAttack(CalculateDamage(10, selectedEnemyBD.GetDef()), selectedEnemyBP));
-        // }
+        if (selectedEnemyBD.state != charState.DEAD)
+        {
+            DeselectAllEnemies();
+            selectedEnemyToAttack = selectedEnemyBP;
+            selectedEnemyBP.Selected();            
+        }
+    }
+
+    public void DeselectAllEnemies() {
+        foreach (CharacterBattlePortrait charBP in enemiesList) {
+            charBP.Deselected();
+            selectedEnemyToAttack = null;
+        }
     }
 }
