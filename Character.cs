@@ -102,16 +102,3 @@ public class Stats
         Rarity = clone.Rarity;
     }
 }
-
-public class Buffs {
-    public int AtkBuff;
-    public int DefBuff;
-    public int HPMaxBuff;
-    public int MPMaxBuff;
-    public int HPRecBuff;
-    public int MPRecBuff; 
-}
-
-public class Abilities {
-
-}

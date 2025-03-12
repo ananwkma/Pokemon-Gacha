@@ -26,7 +26,7 @@ public class CharacterBattleData : MonoBehaviour
     public void SetCharBD(Character character) {
         thisChar = character;
         SetFullHp();
-        SetFullMp();
+        SetNoMp();
         ResetBuffs();
     }
 
@@ -54,15 +54,29 @@ public class CharacterBattleData : MonoBehaviour
         }
     }
 
+    public void IncreaseMana() {
+        if (CurrentMP < MaxMP) {
+            CurrentMP++;
+            thisCharBP.AddMana(CurrentMP);
+            if (CurrentMP == MaxMP) {
+                thisCharBP.ActivateAbility();
+            }
+        }
+    }
+
     public void SetFullHp() {        
         MaxHP = thisChar.Stats.Hp;
         CurrentHP = thisChar.Stats.Hp;
     }  
 
-    public void SetFullMp() {        
-        CurrentMP = thisChar.Stats.Mp;
+    public void SetNoMp() {        
+        CurrentMP = 0;
         MaxMP = thisChar.Stats.Mp;
     }    
+
+    public void UseAbility() {
+        
+    }
 
     public void ResetBuffs() {
         AtkMOD = 1;

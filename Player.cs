@@ -12,10 +12,6 @@ public class Player : MonoBehaviour
     
     public static int worldIndex = 0;
     public static int levelIndex = 4;
-        
-    void Awake() {
-        UpdateCheckpointIndices();
-    }
 
     [System.Serializable]
     public class CharacterCollection {
@@ -58,17 +54,9 @@ public class Player : MonoBehaviour
         return BattleMapDatabase.allWorlds[worldIndex][levelIndex];
     }
 
-    public static void UpdateCheckpointIndices() {
-        // worldIndex = battleProgress[0]-1;
-        // levelIndex = battleProgress[1]-1;
-    }
-
     public static void IncrementCheckpoint() {
         if (levelIndex < BattleMapDatabase.allWorlds[worldIndex].Length-1) {
             levelIndex++;
-            Debug.Log("worldIndex " + worldIndex);
-            Debug.Log("levelIndex " + levelIndex);
-            Debug.Log("BattleMapDatabase.allWorlds " + (BattleMapDatabase.allWorlds[worldIndex][levelIndex + 1]==null));
         }
         else if (worldIndex < BattleMapDatabase.allWorlds.Length-1) {
             levelIndex = 0;

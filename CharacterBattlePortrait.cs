@@ -10,20 +10,28 @@ public class CharacterBattlePortrait : MonoBehaviour
     public Image heroImage;
     public Image DeadImage;
     public Image selectedImage;
+    public Image manaCrystal1;
+    public Image manaCrystal2;
+    public Image manaCrystal3;
+    public Image manaCrystal4;
+    public Image manaCrystal5;
 
     public TMP_Text nameText;
     public TMP_Text HPText;
 
     public Slider hpSlider;
+    public Transform manaContainer;
 
     public Button characterButton;
     public Button enemySelection;
+    public Button ultButton;
 
     public BattleSystem bs;    
     public CharacterBattleData charBDPrefab;
     public Character thisChar;    
     public CharacterBattleData thisCharBD;
     public bool isHero;
+    public Image[] manaCrystalArray;
 
 
 
@@ -42,6 +50,8 @@ public class CharacterBattlePortrait : MonoBehaviour
             characterButton.interactable = false;
             enemySelection.onClick.AddListener(OnEnemyClick);
         }
+        
+        manaCrystalArray = new Image[] { manaCrystal1, manaCrystal2, manaCrystal3, manaCrystal4, manaCrystal5 };
     }
 
     public void Initialize(Character character)
@@ -63,6 +73,7 @@ public class CharacterBattlePortrait : MonoBehaviour
         HPText.text = thisCharBD.CurrentHP + " / " + thisCharBD.MaxHP;
         hpSlider.maxValue = thisCharBD.MaxHP;
         hpSlider.value = thisCharBD.CurrentHP;
+        ultButton.gameObject.SetActive(false);
         Deselected();
     }
 
@@ -76,9 +87,27 @@ public class CharacterBattlePortrait : MonoBehaviour
         }
     }
 
+    public void AddMana(int currentMana) {
+        for (int i = 0; i < currentMana; i++) {
+            manaCrystalArray[i].color = Color.white;
+        }
+    }
+
     public void Attack() {
         bs.PlayerAttack(thisCharBD.GetAtk());
+        thisCharBD.IncreaseMana();
         Disable();
+    }
+
+    public void ActivateAbility() {
+        ultButton.gameObject.SetActive(true);
+    }
+
+    public void UseAbility() {
+        for (int i = 0; i < thisCharBD.MaxMP; i++) {
+            manaCrystalArray[i].color = new Color(0.3f, 0.3f, 0.3f, 1f);
+        }
+        thisCharBD.UseAbility();
     }
 
     public void Selected() {
