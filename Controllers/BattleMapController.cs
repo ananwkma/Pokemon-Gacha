@@ -6,10 +6,12 @@ using Newtonsoft.Json;
 public class BattleMapController : MonoBehaviour
 {   
     public Checkpoint currentCheckPoint; 
-    public CheckpointObject checkpointGOPrefab;
+    [SerializeField] private CheckpointObject checkpointGOPrefab;
     [SerializeField] private Transform checkpointGOContainer;
 
     void Awake() {
+        if (!IsValidPlayerState()) return;
+
         int worldIndex = Player.worldIndex;
         int levelIndex = Player.levelIndex;
 
@@ -21,9 +23,28 @@ public class BattleMapController : MonoBehaviour
             if (i < levelIndex) {
                 checkpoint.completeCheckpoint();
             }
-             
-            CheckpointObject checkpointGO = Instantiate(checkpointGOPrefab, checkpointGOContainer);
-            checkpointGO.Initialize(checkpoint);
+            
+            InstantiateCheckpoint(checkpoint);
         }
+    }
+
+    private bool IsValidPlayerState() {
+        if (BattleMapDatabase.allWorlds == null ||
+            Player.worldIndex >= BattleMapDatabase.allWorlds.Length ||
+            Player.levelIndex >= BattleMapDatabase.allWorlds[Player.worldIndex].Length) {
+                Debug.LogError("Invalid world or level index in BattleMapDatabase");
+                return false;
+            }
+        return true;
+    }
+
+    private void InstantiateCheckpoint(Checkpoint checkpoint) {
+        if (checkpointGOPrefab == null || checkpointGOContainer == null) {
+            Debug.LogError("Checkpoint prefab or container is missing");
+            return;
+        }
+
+        CheckpointObject checkpointGO = Instantiate(checkpointGOPrefab, checkpointGOContainer);
+        checkpointGO.Initialize(checkpoint);
     }
 }

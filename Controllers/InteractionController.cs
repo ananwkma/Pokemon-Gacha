@@ -5,9 +5,9 @@ using TMPro;
 using UnityEngine.UI;
 using System.Threading;
 
-public class DatingController : MonoBehaviour
+public class InteractionController : MonoBehaviour
 {
-    public static DatingController Instance { get; private set; }
+    public static InteractionController Instance { get; private set; }
 
     [SerializeField] private GameObject DialogueParent;
     [SerializeField] private GameObject responseButtonPrefab;

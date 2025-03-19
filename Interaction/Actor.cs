@@ -6,7 +6,7 @@ public class Actor : MonoBehaviour
     public Dialogue Dialogue;
 
     public void SpeakTo() {
-        DatingController.Instance.StartDialogue(Name, Dialogue.RootNode);
+        InteractionController.Instance.StartDialogue(Name, Dialogue.RootNode);
     }
     
     void Start() {
