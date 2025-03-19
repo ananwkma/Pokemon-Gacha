@@ -8,7 +8,6 @@ public class GachaButton : MonoBehaviour
 {
     [SerializeField] private TMP_Text characterNameText;
     [SerializeField] private TMP_Text descriptionText;
-    [SerializeField] private TMP_Text gems;
     [SerializeField] private Image characterImage;
     [SerializeField] private Image rarityStar;
     [SerializeField] private Image rarityStar2;
@@ -95,14 +94,13 @@ public class GachaButton : MonoBehaviour
             Player.cc.Add(roll);
 
             Player.gems -= 100;
-            gems.text = Player.gems.ToString() + " Gems";
+            InfoBarController.Instance.UpdateGems();
         }
     }
 
     void Start () {
         if (descriptionText) descriptionText.enabled = false;
         if (rarityStar) disableStars();
-        if (gems) gems.text = Player.gems.ToString() + " Gems";
         if (characterImage) characterImage.color = new Color32(255,255,255,0);
     }
 }

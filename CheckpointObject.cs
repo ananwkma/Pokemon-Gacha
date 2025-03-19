@@ -14,6 +14,9 @@ public class CheckpointObject : MonoBehaviour
         thisCheckpoint = checkpoint;
         levelText.text = thisCheckpoint.World + "-" + thisCheckpoint.Level;
         checkpointButton.interactable = !thisCheckpoint.Completed;
+        if (thisCheckpoint.Completed) {
+            GlobalUtil.SetTextColor("#AAAAAA" , levelText);
+        }
     }
     
     void Awake() {
