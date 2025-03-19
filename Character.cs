@@ -8,24 +8,32 @@ public class Character
     private string name;
     private string title;
     private string description;
+    private string dialogueDatabasePath;
     private Stats stats;
     [SerializeField] private string id;
 
-    public string Name { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string Id { get; set; }
-    public Stats Stats { get; set; }
+    public string Name;
+    public string Title;
+    public string Description;
+    public string DialogueDatabasePath;
+    public Stats Stats;
+    public string Id;
+
+    [System.NonSerialized]
+    public DialogueDatabase CharacterDialogues;
+
 
     public Character() { }
     
-    public Character(string name, string title, string description, Stats stats, string id)
+    public Character(string name, string title, string description, string dialogueDatabasePath, Stats stats, string id)
     {
         Name = name;
         Title = title;
         Description = description;
         Stats = stats;
         Id = id;
+        DialogueDatabasePath = dialogueDatabasePath;
+        LoadDialogueDatabase();
     }
 
     public Character(string name, string title, string description, Stats stats)
@@ -34,6 +42,16 @@ public class Character
         Title = title;
         Description = description;
         Stats = stats;
+    }
+    
+    public Character(string name, string title, string description, string dialogueDatabasePath, Stats stats)
+    {
+        Name = name;
+        Title = title;
+        Description = description;
+        Stats = stats;
+        DialogueDatabasePath = dialogueDatabasePath;        
+        LoadDialogueDatabase();
     }
 
     //enemy
@@ -49,6 +67,7 @@ public class Character
         Name = clone.Name;
         Title = clone.Title;
         Description = clone.Description;
+        DialogueDatabasePath = clone.DialogueDatabasePath;
         Id = clone.Id;
         Stats = new Stats(clone.Stats);
     }
@@ -56,6 +75,16 @@ public class Character
     public Character Clone()
     {
         return new Character(this);
+    }
+
+    public void LoadDialogueDatabase()
+    {
+        if (!string.IsNullOrEmpty(DialogueDatabasePath))
+        {
+            CharacterDialogues = Resources.Load<DialogueDatabase>(DialogueDatabasePath);
+            if (CharacterDialogues == null)
+                Debug.LogError($"Failed to load DialogueDatabase from path: {DialogueDatabasePath}");
+        }
     }
 }
 

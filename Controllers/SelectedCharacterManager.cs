@@ -23,7 +23,7 @@ public class SelectedCharacterManager : MonoBehaviour
         if (characterRender) {
             characterRender.sprite = Resources.Load<Sprite>($"Sprites/FullRender/{myCharacter.Title}");
         }
-
+        
         if (statsText) {
             statsText.text = $"HP: {myCharacter.Stats.Hp}\n" + 
                              $"MP: {myCharacter.Stats.Mp}\n" +

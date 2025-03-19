@@ -32,16 +32,6 @@ public class CharacterCollectionManager : MonoBehaviour
         CharacterIcon prefabToUse = array == teamBuilderSlots ? teamIconPrefab : characterIconPrefab;
         CharacterIcon newCharacterIcon = Instantiate(prefabToUse, array[idx].transform);
         newCharacterIcon.InitializeCharacterIcon(character, idx);
-
-        // if (array == teamBuilderSlots) {
-        //     idx = FindNextAvailableSlot();
-        //     CharacterIcon newCharacterIconGo = Instantiate(teamIconGoPrefab, array[idx].transform);
-        //     newCharacterIconGo.InitializeCharacterIcon(character, idx);
-        // }
-        // else if (array == characterCollectionSlots) {
-        //     CharacterIcon newCharacterIconGo = Instantiate(characterIconPrefab, array[idx].transform);
-        //     newCharacterIconGo.InitializeCharacterIcon(character, idx);
-        // }
     }
 
     public void AddToTeamComp (Character selectedCharacter) {
@@ -62,6 +52,7 @@ public class CharacterCollectionManager : MonoBehaviour
                 CharacterIcon characterIcon = slot.transform.GetChild(0).GetComponent<CharacterIcon>();
                 if (characterIcon != null && characterIcon.Char.Id == selectedCharacter.Id) {
                     characterIcon.selectedButton.SetActive(false);
+                    characterIcon.ToggleInteractable();
                     break;
                 }
             }
@@ -77,11 +68,6 @@ public class CharacterCollectionManager : MonoBehaviour
         }
         return -1;
     }
-
-    // public void SetCharacterIconPrefab(Character character, int i) {
-    //     characterIconPrefab.Char = character;
-    //     characterIconPrefab.Idx = i;
-    // }
 
     void LoadCharacters() {
         if (Player.cc?.characterCollection == null) return;

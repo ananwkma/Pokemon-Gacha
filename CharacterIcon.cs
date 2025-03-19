@@ -44,6 +44,16 @@ public class CharacterIcon : MonoBehaviour
             id = this.GetInstanceID();
             selectedButton.SetActive(true);
         } 
+        ToggleInteractable();
+    }
+
+    public void ToggleInteractable() {
+        Button button = GetComponent<Button>();
+        if (button != null) {
+            button.interactable = !button.interactable;
+        } else {
+            Debug.LogError("Button component not found on CharacterIcon.");
+        }
     }
 
     public void RemoveFromTeamComp () {

@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Threading;
+using Newtonsoft.Json;
 
 public class InteractionController : MonoBehaviour
 {
@@ -18,19 +19,23 @@ public class InteractionController : MonoBehaviour
     private void Awake() {
         if (Instance == null) {
             Instance = this;
-            Debug.Log("success");
         }
         else {
             Destroy(gameObject);
-            Debug.Log("failed");
         }
-        HideDialogue();
-
+        
         CharacterImage.sprite = Resources.Load<Sprite>("Sprites/FullRender/" + Player.selectedCharacter.Title);
         CharacterNameText.text = Player.selectedCharacter.Name;
+        
+        StartDialogue(Resources.Load<DialogueDatabase>(Player.selectedCharacter.DialogueDatabasePath).dialogues[0]);
     }
     
-    public void StartDialogue(string title, DialogueNode node) {
+    public void StartDialogue(DialogueNode node) {
+        if (node == null) {
+            Debug.LogError("Dialogue node is missing!");
+            return;
+        }
+
         ShowDialogue();
         ConversationText.text = node.dialogueText;
 
@@ -40,17 +45,14 @@ public class InteractionController : MonoBehaviour
 
         foreach (DialogueResponse response in node.responses) {
             GameObject buttonObj = Instantiate(responseButtonPrefab, responseButtonContainer);
-            Debug.Log("default text: " + buttonObj.GetComponentInChildren<TextMeshProUGUI>().text);
-            Debug.Log("response.responseText: " + response.responseText);
-
             buttonObj.GetComponentInChildren<TextMeshProUGUI>().text = response.responseText;
-            buttonObj.GetComponent<Button>().onClick.AddListener(() => SelectResponse(response, title));
+            buttonObj.GetComponent<Button>().onClick.AddListener(() => SelectResponse(response));
         }
     }
 
-    public void SelectResponse(DialogueResponse response, string title) {
+    public void SelectResponse(DialogueResponse response) {
         if (response.nextNode != null) {
-            StartDialogue(title, response.nextNode);
+            StartDialogue(response.nextNode);
         }
         else {
             HideDialogue();
