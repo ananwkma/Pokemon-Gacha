@@ -19,7 +19,7 @@ public class BattleSystem : MonoBehaviour
     public BattleState state;
     CharacterBattlePortrait selectedEnemyToAttack;
 
-    private int numberOfHeroesAlive, numberOfEnemiesAlive, movesRemaining;
+    public int numberOfHeroesAlive, numberOfEnemiesAlive, movesRemaining, enemyMovesRemaining;
     public static List<CharacterBattlePortrait> heroList = new List<CharacterBattlePortrait>();
     public static List<CharacterBattlePortrait> enemiesList = new List<CharacterBattlePortrait>();
 
@@ -84,6 +84,7 @@ public class BattleSystem : MonoBehaviour
     
     IEnumerator EnemyTurn() {
         if (state != BattleState.ENEMYTURN) yield break;
+        enemyMovesRemaining = numberOfEnemiesAlive;
         
         foreach (CharacterBattlePortrait selectedEnemyBP in enemiesList) {
             CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
@@ -103,15 +104,26 @@ public class BattleSystem : MonoBehaviour
 
                 selectedHeroBD.TakeDamage(damage);
                 selectedHeroBP.SetHP(damage);
+                enemyMovesRemaining--;
 
                 updateAliveHeroes();
-                movesRemaining = numberOfHeroesAlive;        
             }
             else
             {
                 Debug.Log("No heroes are alive.");
+                yield break;
             }
-        }        
+        }
+        
+        movesRemaining = numberOfHeroesAlive;   
+
+        yield return new WaitForSeconds(1f);
+        
+        if (state != BattleState.ENEMYTURN || numberOfHeroesAlive == 0) yield break;
+        
+        if (enemyMovesRemaining == 0) {
+            changeToPlayerTurn();
+        }
     }
 
     void EndBattle() {
@@ -136,8 +148,15 @@ public class BattleSystem : MonoBehaviour
     }
 
     void updateAliveHeroes() {
+        if (numberOfHeroesAlive == 0) {
+            state = BattleState.LOST;
+            EndBattle();
+        }
+    }
+
+    void changeToPlayerTurn() {        
         int aliveCount = 0;
-        
+
         foreach (CharacterBattlePortrait charBP in heroList) {
             CharacterBattleData thisCharBD = charBP.thisCharBD;
             
@@ -146,16 +165,11 @@ public class BattleSystem : MonoBehaviour
                 aliveCount++;
             }
         }
-        
+
         numberOfHeroesAlive = aliveCount;
 
-        if (numberOfHeroesAlive == 0) {
-            state = BattleState.LOST;
-            EndBattle();
-        } else {
-            state = BattleState.PLAYERTURN;
-            PlayerTurn();
-        }
+        state = BattleState.PLAYERTURN;
+        PlayerTurn();
     }
 
     void updateAliveEnemies() {

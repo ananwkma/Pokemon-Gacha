@@ -33,8 +33,6 @@ public class CharacterBattlePortrait : MonoBehaviour
     public bool isHero;
     public Image[] manaCrystalArray;
 
-
-
     void Awake() {
         Enable();
         bs = GameObject.FindWithTag("BS").GetComponent<BattleSystem>();
@@ -68,7 +66,6 @@ public class CharacterBattlePortrait : MonoBehaviour
     }
 
     public void SetHUD() {
-        // Debug.Log("thisChar " + JsonConvert.SerializeObject(thisChar, Formatting.Indented));
         nameText.text = thisChar.Name;
         HPText.text = thisCharBD.CurrentHP + " / " + thisCharBD.MaxHP;
         hpSlider.maxValue = thisCharBD.MaxHP;
@@ -81,6 +78,12 @@ public class CharacterBattlePortrait : MonoBehaviour
         hpSlider.value -= dmg;
         if (thisCharBD.CurrentHP < 0) {
             HPText.text  = 0 + " / " + thisCharBD.MaxHP;
+            if (isHero) {
+                bs.numberOfHeroesAlive--;
+            }
+            else {
+                bs.numberOfEnemiesAlive--;
+            }
         }
         else {
             HPText.text = thisCharBD.CurrentHP + " / " + thisCharBD.MaxHP;
