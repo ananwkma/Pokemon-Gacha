@@ -85,29 +85,33 @@ public class BattleSystem : MonoBehaviour
     IEnumerator EnemyTurn() {
         if (state != BattleState.ENEMYTURN) yield break;
         
-        CharacterBattlePortrait selectedEnemyBP = getNextAliveCharacter(enemiesList);
-        CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
-        CharacterBattlePortrait selectedHeroBP = getNextAliveCharacter(heroList);
+        foreach (CharacterBattlePortrait selectedEnemyBP in enemiesList) {
+            CharacterBattleData selectedEnemyBD = selectedEnemyBP.thisCharBD;
 
-        if (selectedHeroBP != null)
-        {
-            CharacterBattleData selectedHeroBD = selectedHeroBP.thisCharBD;
+            if (selectedEnemyBD.state == charState.DEAD) continue;
 
-            int damage = CalculateDamage(selectedEnemyBD.GetAtk(), selectedHeroBD.GetDef());
-            dialogueText.text = $"{selectedEnemyBD.thisChar.Name} attacks!";
+            CharacterBattlePortrait selectedHeroBP = getNextAliveCharacter(heroList);
 
-            yield return new WaitForSeconds(1f);
+            if (selectedHeroBP != null)
+            {
+                CharacterBattleData selectedHeroBD = selectedHeroBP.thisCharBD;
 
-            selectedHeroBD.TakeDamage(damage);
-            selectedHeroBP.SetHP(damage);
+                int damage = CalculateDamage(selectedEnemyBD.GetAtk(), selectedHeroBD.GetDef());
+                dialogueText.text = $"{selectedEnemyBD.thisChar.Name} attacks!";
 
-            updateAliveHeroes();
-            movesRemaining = numberOfHeroesAlive;        
-        }
-        else
-        {
-            Debug.Log("No heroes are alive.");
-        }
+                yield return new WaitForSeconds(1f);
+
+                selectedHeroBD.TakeDamage(damage);
+                selectedHeroBP.SetHP(damage);
+
+                updateAliveHeroes();
+                movesRemaining = numberOfHeroesAlive;        
+            }
+            else
+            {
+                Debug.Log("No heroes are alive.");
+            }
+        }        
     }
 
     void EndBattle() {
